@@ -21,22 +21,23 @@ socket.bind(uri)
 async def sender():
     await asyncio.sleep(0.5)
     print(f"Start sending the video : {uri}")
-    cap = cv2.VideoCapture(video_path)
-    try : 
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                raise KeyboardInterrupt
-            # Downscale if needed
-            frame = cv2.resize(frame, (HEIGHT, WIDTH))
-            # print(frame.shape)
-            await socket.send_multipart([
-                str(frame.dtype).encode(),
-                str(frame.shape).encode(),
-                frame.tobytes()
-            ])
-            await asyncio.sleep(1/FPS)  # target FPS
-    except :
-        cap.release()
+    for _ in range(5) : 
+        cap = cv2.VideoCapture(video_path)
+        try : 
+            while True:
+                ret, frame = cap.read()
+                if not ret:
+                    raise KeyboardInterrupt
+                # Downscale if needed
+                frame = cv2.resize(frame, (HEIGHT, WIDTH))
+                # print(frame.shape)
+                await socket.send_multipart([
+                    str(frame.dtype).encode(),
+                    str(frame.shape).encode(),
+                    frame.tobytes()
+                ])
+                await asyncio.sleep(1/FPS)  # target FPS
+        except :
+            cap.release()
 
 asyncio.run(sender())

@@ -1,19 +1,16 @@
+import zmq
+import zmq.asyncio
 import asyncio
-import websockets
-import json
 
+async def sub():
+    context = zmq.asyncio.Context()
+    socket = context.socket(zmq.SUB)
 
-async def get_gaze(websocket):
-    async for message in websocket:
-        print(message)
-        pass
+    socket.connect("tcp://172.26.128.105:8081")
+    socket.setsockopt(zmq.SUBSCRIBE, b"")
 
+    while True:
+        data = await socket.recv_json()
+        print(f"frame : {data["frame"]}, x : {data["gaze_angle_x"]}, y : {data["gaze_angle_y"]}")
 
-async def main() :
-    port_websocket = 8082
-    async with websockets.serve(get_gaze, "0.0.0.0", port_websocket):
-        print(f"WebSocket server running on ws://0.0.0.0:{port_websocket}")
-        await asyncio.Future() 
-
-if __name__ == "__main__" :
-    asyncio.run(main())
+asyncio.run(sub())

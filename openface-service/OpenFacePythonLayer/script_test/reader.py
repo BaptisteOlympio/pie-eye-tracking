@@ -1,13 +1,21 @@
-import csv
-from time import sleep
-filename = "../data/data.csv"
-i = 0
-while True :
-    sleep(1)
-    with open(filename, 'r') as file:
-        reader = csv.reader(file)
-        last_row = None
-        for row in reader:
-            last_row = row
-    print(i, last_row[0])
-    i += 1
+import pandas as pd
+
+if __name__ == "__main__" :
+    columns = ["frame",
+               "face_id",
+               "timestamp",
+               "confidence",
+               "success",
+               "gaze_0_x",
+               "gaze_0_y",
+               "gaze_0_z",
+               "gaze_1_x",
+               "gaze_1_y",
+               "gaze_1_z",
+               "gaze_angle_x",
+               "gaze_angle_y"]
+    
+    df = pd.read_csv("/workspace/data/data.csv")
+    last_row = df.tail(1)
+    selected_last_row = last_row[columns]
+    print(selected_last_row.to_dict("records"))

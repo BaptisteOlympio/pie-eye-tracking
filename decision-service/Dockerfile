@@ -6,4 +6,3 @@ RUN pip install -r requirements.txt
 
 WORKDIR /workspace
 
-EXPOSE 8082

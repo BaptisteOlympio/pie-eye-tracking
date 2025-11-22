@@ -7,7 +7,6 @@
   "mounts": [
     "source=${localWorkspaceFolder},target=/workspace,type=bind"
   ],
-  "appPort": ["8082:8082"],
   "customizations": {
     "vscode": {
       "settings": {},
