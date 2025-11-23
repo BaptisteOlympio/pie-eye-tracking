@@ -8,6 +8,7 @@ async def sub():
 
     socket.connect("tcp://172.26.128.105:8081")
     socket.setsockopt(zmq.SUBSCRIBE, b"")
+    print("Listening on : tcp://172.26.128.105:8081...")
 
     while True:
         data = await socket.recv_json()

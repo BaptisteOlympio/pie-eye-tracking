@@ -2,9 +2,7 @@
 
 import asyncio
 import numpy as np
-import cv2
 import subprocess
-import json
 import pandas as pd
 import zmq
 import zmq.asyncio
@@ -24,11 +22,10 @@ async def write_frame():
     ffmpeg = subprocess.Popen([
         "ffmpeg", "-y",
         "-f", "rawvideo", "-pix_fmt", "bgr24",
-        "-s", f"{WIDTH}x{HEIGHT}", "-r", "30",
+        "-s", f"{WIDTH}x{HEIGHT}", "-r", "15",
         "-i", "-", "-f", "v4l2", "/dev/video0"
     ], stdin=subprocess.PIPE)
-    
-    while True : 
+    while True :
         dtype_b, shape_b, data_b = await socket_video_service.recv_multipart()
         dtype = np.dtype(dtype_b.decode())
         shape = tuple(map(int, shape_b.decode().strip("()").split(",")))
@@ -37,41 +34,44 @@ async def write_frame():
         loop = asyncio.get_running_loop()
         await loop.run_in_executor(None, ffmpeg.stdin.write, frame.tobytes())
 
-async def gaze_sender() :
+async def gaze_sender():
     columns = ["frame", "face_id", "timestamp", "confidence", "success", "gaze_0_x",
-               "gaze_0_y", "gaze_0_z", "gaze_1_x", "gaze_1_y", "gaze_1_z", 
+               "gaze_0_y", "gaze_0_z", "gaze_1_x", "gaze_1_y", "gaze_1_z",
                "gaze_angle_x", "gaze_angle_y"]
 
-    
     port_gaze_data = "8081"
-    
+
     socket_gaze_sender = context.socket(zmq.PUB)
     socket_gaze_sender.bind(f"tcp://*:{port_gaze_data}")
-    
-    await asyncio.sleep(0.5)
-    
-    while True :
-        try : 
-            df = pd.read_csv("/workspace/data/data.csv")
-        except pd.errors.EmptyDataError :
-            pass
-        last_row = df.tail(1)
-        selected_last_row = last_row[columns].to_dict("records")[0]
-        # print(type(selected_last_row))
-        await socket_gaze_sender.send_json(selected_last_row)
-        await asyncio.sleep(1/30)
-#     # uri_decision = "ws://172.26.128.105:8082"
-#     # async with websockets.connect(uri=uri_decision) as ws:
-#     while True:
-#         # df = pd.read_csv("/workspace/data/data.csv")
-#         # last_row = df.tail(1)
-#         # print(last_row)
-#         # print(type(last_row))
-#         # data_string = json.dump()
-#         # await ws.send(data_string)
-#         await asyncio.sleep(1)  # target FPS
-    
 
+    await asyncio.sleep(0.5)  # let subscribers connect
+
+    loop = asyncio.get_running_loop()
+
+    async def load_csv():
+        """Read CSV in a background thread safely."""
+        try:
+            return await loop.run_in_executor(
+                None, pd.read_csv, "/workspace/data/data.csv"
+            )
+        except (pd.errors.EmptyDataError,
+                pd.errors.ParserError,
+                FileNotFoundError,
+                EOFError):
+            return None
+
+    while True:
+        df = await load_csv()
+
+        if df is not None and not df.empty:
+            try:
+                row = df.tail(1)[columns].to_dict("records")[0]
+                await socket_gaze_sender.send_json(row)
+            except Exception:
+                # corrupted row or missing columns
+                pass
+
+        await asyncio.sleep(1/30)
 
 async def main() :
     await asyncio.gather(
@@ -81,4 +81,3 @@ async def main() :
 
 if __name__ == "__main__" :
     asyncio.run(main())
-    # asyncio.run(write_frame())
