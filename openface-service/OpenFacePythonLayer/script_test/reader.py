@@ -14,8 +14,11 @@ if __name__ == "__main__" :
                "gaze_1_z",
                "gaze_angle_x",
                "gaze_angle_y"]
+    gaze_angle = [
+        "gaze_angle_x",
+        "gaze_angle_y"
+    ]
     
     df = pd.read_csv("/workspace/data/data.csv")
-    last_row = df.tail(1)
-    selected_last_row = last_row[columns]
-    print(selected_last_row.to_dict("records"))
+    df_selected = df[gaze_angle]
+    print(df_selected.max(), df_selected.min())
