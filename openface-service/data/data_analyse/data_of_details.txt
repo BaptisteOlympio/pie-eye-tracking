@@ -1,0 +1,10 @@
+Input:test/test_gouget.mp4
+Input full path:/workspace/test/test_gouget.mp4
+Camera parameters:500,500,320,240
+Output csv:data.csv
+Gaze: 1
+AUs: 0
+Landmarks 2D: 0
+Landmarks 3D: 0
+Pose: 0
+Shape parameters: 0

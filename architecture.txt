@@ -1,0 +1,25 @@
+/f  [error opening dir]
+.
+├── README.md
+├── architecture.txt
+├── decision-service
+│   ├── Dockerfile
+│   ├── app
+│   ├── requirements.txt
+│   └── test_script
+├── openface-service
+│   ├── OpenFace
+│   ├── OpenFacePythonLayer
+│   ├── data
+│   ├── docker-compose.yml
+│   ├── processed
+│   ├── requirements.txt
+│   └── test
+└── video_service
+    ├── Dockerfile
+    ├── app
+    ├── data
+    ├── requirements.txt
+    └── test
+
+14 directories, 8 files
