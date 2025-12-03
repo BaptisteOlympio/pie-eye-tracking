@@ -4,7 +4,9 @@
 # miss, or the dockerfile changes prior to this step.
 # To update these patch files, be sure to run build with --no-cache
 FROM alpine as model_data
-RUN apk --no-cache --update-cache add wget
+# Ici on run pas tout le temps le --no-cache pour aller plus vite dans la compilation.
+# RUN apk --no-cache --update-cache add wget
+RUN apk add wget
 WORKDIR /data/patch_experts
 
 RUN wget -q https://www.dropbox.com/s/7na5qsjzz8yfoer/cen_patches_0.25_of.dat &&\
