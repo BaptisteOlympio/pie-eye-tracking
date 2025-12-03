@@ -102,40 +102,40 @@ COPY ./OpenFace ./
 COPY --from=model_data /data/patch_experts/* \
     /root/openface/lib/local/LandmarkDetector/model/patch_experts/
 
-RUN mkdir -p build && cd build && \
-    cmake -D CMAKE_BUILD_TYPE=RELEASE -G Ninja .. && \
-    ninja &&\
-    DESTDIR=/root/diff ninja install
+# RUN mkdir -p build && cd build && \
+#     cmake -D CMAKE_BUILD_TYPE=RELEASE -G Ninja .. && \
+#     ninja &&\
+#     DESTDIR=/root/diff ninja install
 
 
 
-## ==================== Streamline container ===========================
-## Clean up - start fresh and only copy in necessary stuff
-## This shrinks the image from ~8 GB to ~1.6 GB
-FROM ubuntu_base as final
+# ## ==================== Streamline container ===========================
+# ## Clean up - start fresh and only copy in necessary stuff
+# ## This shrinks the image from ~8 GB to ~1.6 GB
+# FROM ubuntu_base as final
 
-WORKDIR /root
+# WORKDIR /root
 
-# Copy in only necessary libraries
-COPY --from=openface /root/diff /
+# # Copy in only necessary libraries
+# COPY --from=openface /root/diff /
 
-# Since we "imported" the build artifacts, we need to reconfigure ld
-RUN ldconfig
+# # Since we "imported" the build artifacts, we need to reconfigure ld
+# RUN ldconfig
 
-# # # ## ================== Python layer ====================================
+# # # # ## ================== Python layer ====================================
 
-RUN apt-get update && \ 
-    apt-get install -y python3 python3-pip && \
-    rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && \ 
+#     apt-get install -y python3 python3-pip && \
+#     rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+# RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
-COPY ./requirements.txt .
+# COPY ./requirements.txt .
 
-RUN pip3 install -r requirements.txt
+# RUN pip3 install -r requirements.txt
 
-WORKDIR /workspace
+# WORKDIR /workspace
 
-EXPOSE 8081
+# EXPOSE 8081
 
 
