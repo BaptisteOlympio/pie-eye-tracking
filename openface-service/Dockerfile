@@ -60,14 +60,18 @@ RUN curl http://dlib.net/files/dlib-19.13.tar.bz2 -LO &&\
     tar xf dlib-19.13.tar.bz2 && \
     rm dlib-19.13.tar.bz2 &&\
     mv dlib-19.13 dlib &&\
-    mkdir -p dlib/build &&\
-    cd dlib/build
+    mkdir -p dlib/build
 
-# RUN cmake -DCMAKE_BUILD_TYPE=Release -G Ninja .. &&\
-#     ninja && \
-#     ninja install && \
-#     DESTDIR=/root/diff ninja install &&\
-#     ldconfig
+RUN cd dlib/build && \
+    cmake -DCMAKE_BUILD_TYPE=Release \
+          -G Ninja \
+          -DDLIB_NO_GUI_SUPPORT=ON \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache .. &&\
+    ninja -j${nproc} && \
+    ninja install && \
+    DESTDIR=/root/diff ninja -j${nproc} install &&\
+    ldconfig
 
 # ## ==================== Building OpenCV ======================
 # ENV OPENCV_VERSION=4.1.0
