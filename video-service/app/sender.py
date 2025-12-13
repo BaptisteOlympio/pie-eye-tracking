@@ -5,6 +5,7 @@ import zmq.asyncio
 import argparse
 import platform
 import subprocess
+import numpy as np
 
 # On récupère les arguments 
 
@@ -47,6 +48,7 @@ context = zmq.asyncio.Context()
 
 async def sender():
     socket = context.socket(zmq.PUB)
+    socket.setsockopt(zmq.SNDHWM, 1)
     socket.bind(uri)
     await asyncio.sleep(0.5)
     print(f"On envoie la vidéo à l'adresse : {uri}")
@@ -61,6 +63,7 @@ async def sender():
                     break
                 # Downscale if needed
                 frame = cv2.resize(frame, (HEIGHT, WIDTH))
+                frame = np.flip(frame, axis=1)
                 # print(frame.shape)
                 await socket.send_multipart([
                     str(frame.dtype).encode(),

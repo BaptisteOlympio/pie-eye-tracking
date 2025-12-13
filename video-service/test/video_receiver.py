@@ -21,20 +21,33 @@ latest_frame = None
 
 context = zmq.asyncio.Context()
 socket = context.socket(zmq.SUB)
+socket.setsockopt(zmq.SUBSCRIBE, b"")
+socket.setsockopt(zmq.RCVHWM, 1)
+socket.setsockopt(zmq.LINGER, 0)
 socket.connect(uri)
 
-socket.setsockopt(zmq.SUBSCRIBE, b"")
+async def _recv_multipart_async(socket):
+    """Yield multipart messages from an async zmq socket."""
+    while True:
+        try:
+            parts = await socket.recv_multipart()
+        except Exception:
+            # Socket closed or interrupted
+            return
+        yield parts
 
 async def recv_msg():
     global latest_frame
-    while True : 
-        dtype_b, shape_b, data_b = await socket.recv_multipart()
+    async for parts in _recv_multipart_async(socket=socket) : 
+        if not parts or len(parts) != 3:
+            # malformed message, skip
+            continue
+        dtype_b, shape_b, data_b = parts
         dtype = np.dtype(dtype_b.decode())
         shape = tuple(map(int, shape_b.decode().strip("()").split(",")))
-        
         arr = np.frombuffer(data_b, dtype=dtype).reshape(shape)
-        # print("Received:", arr.shape)
         latest_frame = arr
+        
 
 async def display_loop():
     global latest_frame
