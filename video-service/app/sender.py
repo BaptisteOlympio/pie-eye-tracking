@@ -5,6 +5,7 @@ import zmq.asyncio
 import argparse
 import platform
 import subprocess
+import numpy as np
 
 # On récupère les arguments 
 
@@ -61,6 +62,7 @@ async def sender():
                     break
                 # Downscale if needed
                 frame = cv2.resize(frame, (HEIGHT, WIDTH))
+                frame = np.flip(frame, axis=1)
                 # print(frame.shape)
                 await socket.send_multipart([
                     str(frame.dtype).encode(),
