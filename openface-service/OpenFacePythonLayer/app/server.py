@@ -86,14 +86,7 @@ async def write_frame():
 
         if frame.size == 0:
             continue
-
-        if frame.shape != (HEIGHT, WIDTH, 3):
-            # try to reshape sensibly or skip
-            try:
-                frame = frame.reshape((HEIGHT, WIDTH, 3))
-            except Exception:
-                continue
-
+        
         data_bytes = frame.tobytes()
         loop = asyncio.get_running_loop()
         ok = await loop.run_in_executor(None, _write_to_ffmpeg, ffmpeg.stdin, data_bytes)
