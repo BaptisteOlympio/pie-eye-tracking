@@ -26,7 +26,8 @@ if system == "Windows" :
     command = "Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress"
     result = subprocess.run(["powershell.exe", command], capture_output=True, text=True)
     ipadress = result.stdout[:-1]
-
+else :
+    ipadress = "*"
 # On charge les variables
 
 stream_loop = args.stream_loop
