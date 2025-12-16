@@ -6,8 +6,10 @@ import sys
 import time
 import numpy as np
 import pickle
+from get_ip_addr import get_ip_address
 
-port = "5556"
+port = "8080"
+ip = get_ip_address()
 
 context = zmq.asyncio.Context()
 socket = context.socket(zmq.PUB)

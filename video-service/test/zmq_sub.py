@@ -3,13 +3,14 @@ import zmq
 import asyncio
 import zmq.asyncio
 import numpy as np
+from get_ip_addr import get_ip_address
 
 port = "8080"
+ip = get_ip_address()
 
 context = zmq.asyncio.Context()
 socket = context.socket(zmq.SUB)
-socket.connect(f"tcp://172.26.128.1:{port}")
-
+socket.connect(f"tcp://{ip}:{port}")
 socket.setsockopt(zmq.SUBSCRIBE, b"")
 
 async def recv_msg():

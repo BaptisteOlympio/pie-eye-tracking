@@ -7,6 +7,8 @@ import platform
 import subprocess
 import numpy as np
 
+from app.utils import get_ip_adress
+
 # On récupère les arguments 
 
 parser = argparse.ArgumentParser()
@@ -19,13 +21,7 @@ parser.add_argument("--fps", type=int, default=30)
 args = parser.parse_args()
 
 # On récupère l'adresse ip de la machine hôte
-
-system = platform.system()
-
-if system == "Windows" :
-    command = "Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress"
-    result = subprocess.run(["powershell.exe", command], capture_output=True, text=True)
-    ipadress = result.stdout[:-1]
+ipadress = get_ip_adress()
 
 # On charge les variables
 
