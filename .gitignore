@@ -5,3 +5,6 @@
 # *.txt
 *.pyc
 __pycache__
+.$architecture.drawio.bkp
+.gitignore
+.$architecture.drawio.dtmp
