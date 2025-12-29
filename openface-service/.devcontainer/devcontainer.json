@@ -1,8 +1,9 @@
 {
   "name": "OpenFace DevContainer",
-  "build" : {
-    "dockerfile" : "../Dockerfile"
-  },
+  // "build" : {
+  //   "dockerfile" : "../Dockerfile"
+  // },
+  "image": "openface_service:latest",
   "workspaceFolder": "/workspace",
   "mounts": [
     "source=${localWorkspaceFolder},target=/workspace,type=bind"
