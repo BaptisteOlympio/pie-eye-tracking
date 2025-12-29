@@ -14,6 +14,6 @@ FROM openface:latest
 
 WORKDIR /workspace
 
-# EXPOSE 8081
+EXPOSE 8081
 
 
