@@ -5,8 +5,9 @@ import zmq.asyncio
 import numpy as np
 from get_ip_addr import get_ip_address
 
-port = "8080"
+port = "8081"
 ip = get_ip_address()
+# ip = "192.168.1.103"
 
 context = zmq.asyncio.Context()
 socket = context.socket(zmq.SUB)

@@ -8,7 +8,7 @@ import numpy as np
 import pickle
 from get_ip_addr import get_ip_address
 
-port = "8080"
+port = "8081"
 ip = get_ip_address()
 
 context = zmq.asyncio.Context()
