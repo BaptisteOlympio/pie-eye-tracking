@@ -5,6 +5,7 @@ import zmq.asyncio
 import argparse
 import pyopenface
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--ip_vs", type=str)
 parser.add_argument("--port_vs", type=str)
