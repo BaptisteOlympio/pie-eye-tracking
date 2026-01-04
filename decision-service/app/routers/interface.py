@@ -28,3 +28,9 @@ async def get_calibration(background_tasks : BackgroundTasks) :
     
     with open("app/templates/calibration/index.html") as file:
         return HTMLResponse(content=file.read())
+
+@interface_router.get("/interface/perf")
+async def get_perf(background_tasks : BackgroundTasks) :
+    background_tasks.add_task()
+    with open("app/templates/perf/index.html") as file : 
+        return HTMLResponse(content=file.read())

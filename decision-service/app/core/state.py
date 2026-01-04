@@ -14,3 +14,10 @@ class GazeVisualisationStatus(str, Enum) :
 
 gaze_visualisation_status = GazeVisualisationStatus.NOT_RUNNING
 gaze_visualisation_lock = asyncio.Lock()
+
+class VideoStatus(str, Enum) : 
+    RUNNING = "running"
+    NOT_RUNNING = "not running"
+
+video_status = VideoStatus.NOT_RUNNING
+video_lock = asyncio.Lock()
