@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+service Numpy {
+    rpc ProcessArray (ArrayRequest) returns (MessageResponse) {}
+}
+
+message ArrayRequest {
+    bytes image = 1;
+    bytes dtype = 2;
+    bytes shape = 3;
+}
+
+message MessageResponse {
+    bytes message = 1;
+}
