@@ -1,5 +1,5 @@
-from app.grpc_compiled import openfaceservice_pb2
-from app.grpc_compiled import openfaceservice_pb2_grpc
+# from grpc_compiled import openfaceservice_pb2
+from grpc_compiled import openfaceservice_pb2_grpc
 
 import grpc
 import numpy as np
