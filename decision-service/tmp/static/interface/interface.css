@@ -1,0 +1,32 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* still no scrolling */
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    color: rgb(31, 156, 31);
+    text-align: center;
+    margin: 10px 0;
+}
+
+.container {
+    flex: 1; /* Automatically fills remaining space */
+    display: flex;
+    background-color: lightgrey;
+}
+
+.box {
+    flex: 1;
+    background-color: black;
+    color: white;
+    border: 2px solid rgb(216, 7, 7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
