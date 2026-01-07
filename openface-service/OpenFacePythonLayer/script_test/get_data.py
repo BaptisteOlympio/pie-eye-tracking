@@ -1,13 +1,14 @@
 # IP_ADDRESS = "192.168.1.23"
 
 import sys
+import cv2
 import zmq
 import asyncio
 import zmq.asyncio
 import numpy as np
 
 port = "8080"
-ip = "happy_benz"
+ip = "happy_benz" #jsute en phase de test
 
 context = zmq.asyncio.Context()
 socket = context.socket(zmq.SUB)
@@ -25,6 +26,7 @@ async def recv_msg():
         arr = np.frombuffer(data_b, dtype=dtype).reshape(shape)
         # print("Received:", arr.shape)
         print(arr)
+
 
 asyncio.run(recv_msg())
 

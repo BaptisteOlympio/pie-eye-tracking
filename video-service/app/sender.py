@@ -32,6 +32,8 @@ else :
     input_video = device
 
 FPS = args.fps
+#TODO: a enlever
+FPS = 1 # On envoie une image toutes les secondes
 HEIGHT = 640
 WIDTH = 480
 
@@ -51,11 +53,12 @@ async def sender():
             while True:
                 ret, frame = cap.read()
                 if not ret:
+                    print("Fin de la vidéo")
                     break
                 # Downscale if needed
                 frame = cv2.resize(frame, (HEIGHT, WIDTH))
                 frame = np.flip(frame, axis=1)
-                # print(frame.shape)
+                print(frame.shape)
                 await socket.send_multipart([
                     str(frame.dtype).encode(),
                     str(frame.shape).encode(),
