@@ -7,3 +7,4 @@
 *.bmp
 *.hog
 *.avi
+openface-service/script_test/grpc
