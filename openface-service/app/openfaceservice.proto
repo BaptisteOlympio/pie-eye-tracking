@@ -10,6 +10,11 @@ message Frame {
     bytes shape = 3;
 }
 
+message LandmarkTuple {
+    int32 x = 1;
+    int32 y = 2; 
+}
+
 message Landmark {
-    bytes landmark = 1;
+    repeated LandmarkTuple landmark = 1;
 }

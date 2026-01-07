@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15openfaceservice.proto\"4\n\x05\x46rame\x12\r\n\x05\x66rame\x18\x01 \x01(\x0c\x12\r\n\x05\x64type\x18\x02 \x01(\x0c\x12\r\n\x05shape\x18\x03 \x01(\x0c\"\x1c\n\x08Landmark\x12\x10\n\x08landmark\x18\x01 \x01(\x0c\x32\x35\n\x0fOpenFaceService\x12\"\n\x0bGetLandmark\x12\x06.Frame\x1a\t.Landmark\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15openfaceservice.proto\"4\n\x05\x46rame\x12\r\n\x05\x66rame\x18\x01 \x01(\x0c\x12\r\n\x05\x64type\x18\x02 \x01(\x0c\x12\r\n\x05shape\x18\x03 \x01(\x0c\"%\n\rLandmarkTuple\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\",\n\x08Landmark\x12 \n\x08landmark\x18\x01 \x03(\x0b\x32\x0e.LandmarkTuple25\n\x0fOpenFaceService\x12\"\n\x0bGetLandmark\x12\x06.Frame\x1a\t.Landmark\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,8 +33,10 @@ if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_FRAME']._serialized_start=25
   _globals['_FRAME']._serialized_end=77
-  _globals['_LANDMARK']._serialized_start=79
-  _globals['_LANDMARK']._serialized_end=107
-  _globals['_OPENFACESERVICE']._serialized_start=109
-  _globals['_OPENFACESERVICE']._serialized_end=162
+  _globals['_LANDMARKTUPLE']._serialized_start=79
+  _globals['_LANDMARKTUPLE']._serialized_end=116
+  _globals['_LANDMARK']._serialized_start=118
+  _globals['_LANDMARK']._serialized_end=162
+  _globals['_OPENFACESERVICE']._serialized_start=164
+  _globals['_OPENFACESERVICE']._serialized_end=217
 # @@protoc_insertion_point(module_scope)

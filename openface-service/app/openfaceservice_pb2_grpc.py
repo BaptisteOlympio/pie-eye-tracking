@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-from . import openfaceservice_pb2 as openfaceservice__pb2
+import openfaceservice_pb2 as openfaceservice__pb2
 
 GRPC_GENERATED_VERSION = '1.70.0'
 GRPC_VERSION = grpc.__version__
