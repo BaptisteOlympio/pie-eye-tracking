@@ -2,6 +2,7 @@ from fastapi import APIRouter, BackgroundTasks, HTTPException
 from fastapi.responses import HTMLResponse
 from app.services import gaze
 from app.services import perf 
+from app.services import process_frame
 from app.core import state
 
 interface_router = APIRouter()

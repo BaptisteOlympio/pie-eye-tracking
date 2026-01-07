@@ -6,6 +6,7 @@ import grpc
 import numpy as np
 import json
 import pyopenface
+import asyncio
 
 # Init pyopenface detector
 detector = pyopenface.Detector("/usr/local/etc/OpenFace/model/main_ceclm_general.txt", 
@@ -14,7 +15,7 @@ detector = pyopenface.Detector("/usr/local/etc/OpenFace/model/main_ceclm_general
 
 
 class OpenFaceService(openfaceservice_pb2_grpc.OpenFaceService) :
-    def GetLandmark(self, request, context) :
+    async def GetLandmark(self, request, context) :
         # Extraction of the numpy array from the request
         dtype = np.dtype(request.dtype.decode())
         shape = tuple(map(int, request.shape.decode().strip("()").split(",")))
@@ -33,17 +34,17 @@ class OpenFaceService(openfaceservice_pb2_grpc.OpenFaceService) :
         
         return landmark
 
-def serve() :
+async def serve() :
     port = "8081"
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+    server = grpc.aio.server()
     openfaceservice_pb2_grpc.add_OpenFaceServiceServicer_to_server(OpenFaceService(), server)
-    server.add_insecure_port("[::]:" + port)
-    server.start()
+    server.add_insecure_port("*:" + port)
+    await server.start()
     print("server listening on " + port)
-    server.wait_for_termination()
+    await server.wait_for_termination()
 
 if __name__ == "__main__" :
-    serve()
+    asyncio.run(serve())
         
         
         
