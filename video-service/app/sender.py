@@ -1,9 +1,13 @@
 import cv2
 import asyncio
-import struct
 import zmq
 import zmq.asyncio
 import argparse
+import platform
+import subprocess
+import numpy as np
+
+# On récupère les arguments 
 
 
 
@@ -25,11 +29,35 @@ input_group.add_argument("--device", type=int,
 args = parser.parse_args()
 
 
+parser.add_argument("-f", "--input_file", type=str, default="/workspace/data/test_gouget_cut.mp4")
+parser.add_argument("--device", type=int, default=-1)
+parser.add_argument("--port", type=int, default=8080)
+parser.add_argument("--fps", type=int, default=30)
+args = parser.parse_args()
+
+# On récupère l'adresse ip de la machine hôte
+
+system = platform.system()
+
+if system == "Windows" :
+    command = "Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress"
+    result = subprocess.run(["powershell.exe", command], capture_output=True, text=True)
+    ipadress = result.stdout[:-1]
+else :
+    ipadress = "*"
+# On charge les variables
 
 stream_loop = args.stream_loop
 port = args.port
 FPS = args.fps
 uri = f"tcp://*:{port}"
+uri = f"tcp://{ipadress}:{port}"
+device = args.device
+
+if device == -1 : 
+    input_video = video_path
+else :
+    input_video = device
 
 use_webcam = args.device is not None
 video_path = args.input_file
@@ -44,13 +72,14 @@ context = zmq.asyncio.Context()
 
 async def sender():
     socket = context.socket(zmq.PUB)
+    socket.setsockopt(zmq.SNDHWM, 1)
     socket.bind(uri)
     await asyncio.sleep(0.5)
-    print(f"Start sending the video : {uri}")
+    print(f"On envoie la vidéo à l'adresse : {uri}")
 
     
     while True : 
-        cap = cv2.VideoCapture(video_path)
+        cap = cv2.VideoCapture(input_video)
         try : 
             while True:
                 ret, frame = cap.read()
@@ -58,6 +87,7 @@ async def sender():
                     break
                 # Downscale if needed
                 frame = cv2.resize(frame, (HEIGHT, WIDTH))
+                frame = np.flip(frame, axis=1)
                 # print(frame.shape)
                 await socket.send_multipart([
                     str(frame.dtype).encode(),
