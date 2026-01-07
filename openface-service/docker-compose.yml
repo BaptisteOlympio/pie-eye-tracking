@@ -1,19 +1,43 @@
----
-# Variables can be set from the shell: `DOCKERTAG=foo docker-compose build`
-# or from a .env file. See docker-compose documentation for details
-# Variable DOCKERUSER should be set to your dockerhub user
-# Alternatively, use a docker registry url as the image name
+#============#============#============#============#============#============
+# ---
+# # Variables can be set from the shell: `DOCKERTAG=foo docker-compose build`
+# # or from a .env file. See docker-compose documentation for details
+# # Variable DOCKERUSER should be set to your dockerhub user
+# # Alternatively, use a docker registry url as the image name
+# version: '3.7'
+# services:
+#   ## Image runtime service
+#   ## This can be used to add volume mounts or pass environment variables
+#   ## Todo: make a service which can use the container interactively
+#   openface:
+#     container_name: openface
+#     build: 
+#       context: ./OpenFace/
+#       dockerfile: /home/bolympio/pie/pie-eye-tracking/openface-service/OpenFacePythonLayer/Dockerfile
+#     # image: "${DOCKERUSER}/openface:${DOCKERTAG}"
+#     tty: true
+#     privileged: true
+#     volumes:
+#       - "${DATA_MOUNT}:${DATA_MOUNT}"
+#       - ./:/workspace
+#       - /dev/video0:/dev/video0
+#     ports:
+#       - "8081:8081"
+#     environment:
+#       DATA_MOUNT: "${DATA_MOUNT}"
+#     command: ["bash"]
+  #============#============#============#============
+
+
+
 version: '3.7'
+
 services:
-  ## Image runtime service
-  ## This can be used to add volume mounts or pass environment variables
-  ## Todo: make a service which can use the container interactively
   openface:
     container_name: openface
     build: 
       context: ./OpenFace/
       dockerfile: /home/bolympio/pie/pie-eye-tracking/openface-service/OpenFacePythonLayer/Dockerfile
-    # image: "${DOCKERUSER}/openface:${DOCKERTAG}"
     tty: true
     privileged: true
     volumes:
@@ -25,9 +49,4 @@ services:
     environment:
       DATA_MOUNT: "${DATA_MOUNT}"
     command: ["bash"]
-  
 
-  
-
-
-...

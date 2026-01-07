@@ -1,18 +1,20 @@
+# IP_ADDRESS = "192.168.1.23"
+
 import sys
 import zmq
 import asyncio
 import zmq.asyncio
 import numpy as np
-from get_ip_addr import get_ip_address
 
 port = "8080"
-ip = get_ip_address()
-# ip = "192.168.1.103"
+ip = "happy_benz"
 
 context = zmq.asyncio.Context()
 socket = context.socket(zmq.SUB)
+socket.setsockopt(zmq.SUBSCRIBE, b"") 
 socket.connect(f"tcp://{ip}:{port}")
-socket.setsockopt(zmq.SUBSCRIBE, b"")
+
+print(f"Connected to server at {ip}:{port}")
 
 async def recv_msg():
     while True:
@@ -21,7 +23,8 @@ async def recv_msg():
         shape = tuple(map(int, shape_b.decode().strip("()").split(",")))
         
         arr = np.frombuffer(data_b, dtype=dtype).reshape(shape)
-        print("Received:", arr.shape)
+        # print("Received:", arr.shape)
+        print(arr)
 
 asyncio.run(recv_msg())
 

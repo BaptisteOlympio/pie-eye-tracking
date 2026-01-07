@@ -1,5 +1,6 @@
 import platform
 import subprocess
+import os
 
 def get_ip_address():
     system = platform.system()
@@ -22,4 +23,8 @@ def get_ip_address():
         ipadress = "Unknown OS" 
 
     print("IP Address :", ipadress)
+    
     return ipadress
+
+if __name__ == "__main__":
+    get_ip_address()

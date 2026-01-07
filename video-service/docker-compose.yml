@@ -1,0 +1,15 @@
+services:
+  video_service:
+    container_name: video_service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - zmq_net
+
+networks:
+  zmq_net:
+    name: zmq_net
+    external: true

@@ -7,8 +7,6 @@ import platform
 import subprocess
 import numpy as np
 
-from app.utils import get_ip_adress
-
 # On récupère les arguments 
 
 parser = argparse.ArgumentParser()
@@ -20,15 +18,12 @@ parser.add_argument("--port", type=int, default=8080)
 parser.add_argument("--fps", type=int, default=30)
 args = parser.parse_args()
 
-# On récupère l'adresse ip de la machine hôte
-ipadress = get_ip_adress()
-
 # On charge les variables
 
 stream_loop = args.stream_loop
 video_path = args.input_file 
 port = args.port
-uri = f"tcp://{ipadress}:{port}"
+uri = f"tcp://*:{port}"
 device = args.device
 
 if device == -1 : 
@@ -71,6 +66,7 @@ async def sender():
             cap.release()
         
         if not(stream_loop) : 
+            print("test")
             break
 
 asyncio.run(sender())

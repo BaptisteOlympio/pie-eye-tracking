@@ -11,7 +11,9 @@
   "runArgs": [
     "--privileged",
     "-v",
-    "/dev/video0:/dev/video0"
+    "/dev/video0:/dev/video0",
+    "--network", "zmq_net",
+    "--name", "openface_service"
   ],
   "customizations": {
     "vscode": {

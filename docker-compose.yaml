@@ -1,17 +1,13 @@
 services:
   video-service :
     container_name : video-service
-    build : 
-      context : video-service/
-      dockerfile : Dockerfile
+    image : video-service:latest
     tty : True
     command : ["bash"]
   
   openface-service : 
     container_name: openface-service
-    build: 
-      context: openface-service/
-      dockerfile: Dockerfile
+    image: openface-service:latest
     tty: true
     privileged: true
     volumes:
