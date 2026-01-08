@@ -27,7 +27,7 @@ class ProcessFrame() :
     
         self.latest_frame = np.empty(shape=0)
         self.latest_landmark = []
-        self.latest_update = 0
+        # self.latest_update = 0
     
     async def process_frame(self) :
         async def _recv_multipart_async(socket):
@@ -45,6 +45,7 @@ class ProcessFrame() :
             
             async for parts in _recv_multipart_async(self.socket_video_service):
                 if not parts or len(parts) != 3:
+                    print("problem part not lenght equal 3")
                     continue
                 dtype_b, shape_b, data_b = parts
                 dtype = np.dtype(dtype_b.decode())
@@ -53,9 +54,11 @@ class ProcessFrame() :
                 try:
                     frame = np.frombuffer(data_b, dtype=dtype).reshape(shape)
                 except Exception:
+                    print("frame canot be transform as numpy array")
                     continue
                 
                 if frame.size == 0:
+                    print("frame size is null")
                     continue
                 
                 response = await stub.GetLandmark(openfaceservice_pb2.Frame(
@@ -71,9 +74,10 @@ class ProcessFrame() :
                 
                 self.latest_frame = frame
                 self.latest_landmark = landmark
-                self.update = (self.update + 1) % 100
+                
+            print("loop finished")
             
             
 
-process_frame = ProcessFrame(ip_vs="172.26.128.105", port_vs = "8080")
+process_frame = ProcessFrame(ip_vs="172.20.10.2", port_vs = "8080")
     

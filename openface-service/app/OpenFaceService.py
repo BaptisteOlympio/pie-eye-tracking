@@ -21,16 +21,20 @@ class OpenFaceService(openfaceservice_pb2_grpc.OpenFaceService) :
         shape = tuple(map(int, request.shape.decode().strip("()").split(",")))
         array = np.frombuffer(buffer=request.frame, dtype=dtype).reshape(shape)
         # print(array.shape, array.dtype, array[0,0,0])
-        # !! Calculation of landmark !! Important, if you want to change model do it here. 
-        landmark_output = detector.landmarkinvideo(array)
+        # !! Calculation of landmark !! Important, if you want to change model do it here.
+        try :  
+            landmark_output = detector.landmarkinvideo(array)
+            
+            face_keypoints = [(int(kp[0]), int(kp[1])) for kp in zip(landmark_output[0], landmark_output[1])]
+            
+            # Create a Landmark message, we add the point after
+            landmark = openfaceservice_pb2.Landmark()
         
-        face_keypoints = [(int(kp[0]), int(kp[1])) for kp in zip(landmark_output[0], landmark_output[1])]
-        
-        # Create a Landmark message, we add the point after
-        landmark = openfaceservice_pb2.Landmark()
-    
-        for face_keypoint_x, face_keypoint_y in face_keypoints :
-            landmark.landmark.add(x=face_keypoint_x, y=face_keypoint_y)
+            for face_keypoint_x, face_keypoint_y in face_keypoints :
+                landmark.landmark.add(x=face_keypoint_x, y=face_keypoint_y)
+        except Exception as e :
+            # print(e)
+            return openfaceservice_pb2.Landmark()
         
         return landmark
 
