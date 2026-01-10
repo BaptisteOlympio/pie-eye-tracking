@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  decision:
+    image: decision-service
+    container_name: decision-service
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    tty: true
+    privileged: true
+    networks:
+      - zmq_net
+
+    # ports:
+      # - "8081:8081"
+    command: ["bash"]
+
+networks:
+  zmq_net:
+    name: zmq_net
+    external: true
+

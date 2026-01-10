@@ -22,7 +22,7 @@ async def send_msg():
     await asyncio.sleep(0.5)  # 🔥 allow subscribers to connect
     i = 0
     while True:
-        data = np.array([[i],[i**2**2**2]], dtype=np.int32)
+        data = np.array([[i]], dtype=np.int32)
         i += 1
         print("Sending:", data)
 

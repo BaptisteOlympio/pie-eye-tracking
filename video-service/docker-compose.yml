@@ -1,6 +1,7 @@
 services:
-  video_service:
-    container_name: video_service
+  video-service:
+    image: video-service
+    container_name: video-service
     build:
       context: .
       dockerfile: Dockerfile

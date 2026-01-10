@@ -8,6 +8,10 @@
     "source=${localWorkspaceFolder},target=/workspace,type=bind"
   ],
   "appPort": ["8083:8083"],
+  "runArgs": [
+    "--name", "decision-service",
+    "--network", "zmq_net"
+  ],
   "customizations": {
     "vscode": {
       "settings": {},
