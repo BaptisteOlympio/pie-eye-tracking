@@ -17,5 +17,7 @@
         "firefox-devtools.vscode-firefox-debug"
       ]
     }
-  }
+  },
+  "remoteUser": "vscode",
+  "updateRemoteUserUID": true
 }
