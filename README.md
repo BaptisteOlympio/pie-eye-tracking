@@ -12,12 +12,13 @@ The core of the application is the eye-tracker model; it takes an image of a fac
 
 # Project Organisation
 The project is organized into services. Each service has its own container. We focused on a modular approach where it easy to change technologies or language as required. 
-<img width="1098" height="202" alt="architecture-Simple Architecture drawio" src="https://github.com/user-attachments/assets/ddc9232f-e792-4966-9ab2-8c6c66a3a957" />
+<img width="1156" height="394" alt="architecture-Simple Architecture drawio" src="https://github.com/user-attachments/assets/546958ff-9aa0-4272-973e-3e52edd6a142" />
 
 # Clone le projet
 Dans ce projet il y a en réalité deux projets github. Le projet principale pie-eye-tracking et une copie du projet original d'OpenFace. Pour cloner l'ensemble des deux projets : 
 ```
 git clone --recurse-submodules https://github.com/BaptisteOlympio/pie-eye-tracking.git
 ```
+
 
 
