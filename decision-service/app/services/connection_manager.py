@@ -29,16 +29,23 @@ class ConnectionManager:
                 return
 
 
-    async def broadcast(self, message: dict, client_type):
+    async def broadcast(self, data, client_type):
         disconnected = []
         # iterate over a copy of the list to avoid issues removing items while iterating
         for conn in list(self.active_connections):
-            if conn["client_type"] == client_type : 
-                try:
-                    await conn["websocket"].send_json(message)
-                except (WebSocketDisconnect, RuntimeError, ConnectionResetError):
-                    # mark the websocket for removal; store the actual WebSocket object
-                    disconnected.append(conn["websocket"])
+            if conn["client_type"] == client_type :
+                if conn["client_type"] == "video" :
+                    try : 
+                        await conn["websocket"].send_bytes(data)
+                    except (WebSocketDisconnect, RuntimeError, ConnectionResetError):
+                        disconnected.append(conn["websocket"])
+                        
+                else : 
+                    try:
+                        await conn["websocket"].send_json(data)
+                    except (WebSocketDisconnect, RuntimeError, ConnectionResetError):
+                        # mark the websocket for removal; store the actual WebSocket object
+                        disconnected.append(conn["websocket"])
 
         for ws in disconnected:
             self.disconnect(ws)

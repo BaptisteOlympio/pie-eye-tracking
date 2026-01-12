@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+service OpenFaceService {
+    rpc GetLandmark (Frame) returns (Landmark) {}
+}
+
+message Frame {
+    bytes frame = 1;
+    bytes dtype = 2;
+    bytes shape = 3;
+}
+
+message LandmarkTuple {
+    int32 x = 1;
+    int32 y = 2; 
+}
+
+message Landmark {
+    repeated LandmarkTuple landmark = 1;
+}

@@ -4,6 +4,11 @@
 *.csv
 *.txt
 *.pyc
+__pycache__
+.$architecture.drawio.bkp
+.gitignore
+.$architecture.drawio.dtmp
+openface-service/script_test/grpc
 *.bmp
 *.hog
 *.avi

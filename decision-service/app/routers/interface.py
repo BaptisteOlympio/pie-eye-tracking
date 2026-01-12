@@ -1,6 +1,8 @@
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from fastapi.responses import HTMLResponse
 from app.services import gaze
+from app.services import perf 
+from app.services import process_frame
 from app.core import state
 
 interface_router = APIRouter()
@@ -27,4 +29,10 @@ async def get_calibration(background_tasks : BackgroundTasks) :
     background_tasks.add_task(gaze.calibration_task)
     
     with open("app/templates/calibration/index.html") as file:
+        return HTMLResponse(content=file.read())
+
+@interface_router.get("/interface/perf")
+async def get_perf(background_tasks : BackgroundTasks) :
+    background_tasks.add_task(perf.video_task)
+    with open("app/templates/perf/index.html") as file : 
         return HTMLResponse(content=file.read())

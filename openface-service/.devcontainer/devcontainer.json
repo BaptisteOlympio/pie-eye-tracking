@@ -1,8 +1,9 @@
 {
-  "name": "OpenFace DevContainer",
-  "build" : {
-    "dockerfile" : "../Dockerfile"
-  },
+  "name": "openface-service DevContainer",
+  // "build" : {
+  //   "dockerfile" : "../Dockerfile"
+  // },
+  "image": "openface_service:latest",
   "workspaceFolder": "/workspace",
   "mounts": [
     "source=${localWorkspaceFolder},target=/workspace,type=bind"
@@ -18,7 +19,8 @@
       "settings": {},
       "extensions": [
         "ms-python.vscode-pylance",
-        "ms-azuretools.vscode-docker"
+        "ms-azuretools.vscode-docker",
+        "sankethdev.vscode-proto"
       ]
     }
   }

@@ -9,26 +9,9 @@ import numpy as np
 
 # On récupère les arguments 
 
-
-
-# partie arguments 
-
-parser = argparse.ArgumentParser(description="Video sender service")
+parser = argparse.ArgumentParser()
 
 parser.add_argument('--stream_loop', action='store_true')
-parser.add_argument("--port", type=int, default=8080)
-parser.add_argument("--fps", type=int, default=30)
-
-# Groupe exclusif input_file / device
-input_group = parser.add_mutually_exclusive_group(required=True)
-input_group.add_argument("-f", "--input_file", type=str,
-                         help="Path to input video file (e.g. test.mp4)")
-input_group.add_argument("--device", type=int,
-                         help="Webcam device index (e.g. 0)")
-
-args = parser.parse_args()
-
-
 parser.add_argument("-f", "--input_file", type=str, default="/workspace/data/test_gouget_cut.mp4")
 parser.add_argument("--device", type=int, default=-1)
 parser.add_argument("--port", type=int, default=8080)
@@ -48,9 +31,8 @@ else :
 # On charge les variables
 
 stream_loop = args.stream_loop
+video_path = args.input_file 
 port = args.port
-FPS = args.fps
-uri = f"tcp://*:{port}"
 uri = f"tcp://{ipadress}:{port}"
 device = args.device
 
@@ -58,11 +40,6 @@ if device == -1 :
     input_video = video_path
 else :
     input_video = device
-
-use_webcam = args.device is not None
-video_path = args.input_file
-device_id = args.device
-
 
 FPS = args.fps
 HEIGHT = 640
