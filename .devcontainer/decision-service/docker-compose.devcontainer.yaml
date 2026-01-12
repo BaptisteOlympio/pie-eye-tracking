@@ -1,0 +1,8 @@
+services:
+  decision-service:
+    working_dir: /workspace
+    volumes:
+      - ./decision-service:/workspace
+    tty: true
+    stdin_open: true
+    command: ["bash"]
