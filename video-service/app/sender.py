@@ -24,7 +24,7 @@ stream_loop = args.stream_loop
 video_path = args.input_file 
 port = args.port
 uri = f"tcp://*:{port}"
-device = args.device
+device = args.device # 0si on veut récupérer la webcam de l'app areil 
 
 if device == -1 : 
     input_video = video_path
@@ -58,7 +58,8 @@ async def sender():
                 # Downscale if needed
                 frame = cv2.resize(frame, (HEIGHT, WIDTH))
                 frame = np.flip(frame, axis=1)
-                print(frame.shape)
+
+                print(frame)
                 await socket.send_multipart([
                     str(frame.dtype).encode(),
                     str(frame.shape).encode(),

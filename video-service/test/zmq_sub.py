@@ -1,4 +1,5 @@
 import sys
+import cv2
 import zmq
 import asyncio
 import zmq.asyncio
@@ -21,7 +22,10 @@ async def recv_msg():
         shape = tuple(map(int, shape_b.decode().strip("()").split(",")))
         
         arr = np.frombuffer(data_b, dtype=dtype).reshape(shape)
-        print("Received:", arr.shape)
+        print("Received:", arr)
+        cv2.imshow("Received Frame", arr)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
 asyncio.run(recv_msg())
 
