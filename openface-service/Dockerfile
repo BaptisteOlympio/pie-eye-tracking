@@ -1,18 +1,16 @@
 FROM openface:latest
 
-# # # # ## ================== Python layer ====================================
+# # # ## ================== Python layer ====================================
 
-# RUN apt-get update && \ 
-#     apt-get install -y python3 python3-pip && \
-#     rm -rf /var/lib/apt/lists/*
+COPY ./requirements.txt .
 
-# RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+RUN pip3 install -r requirements.txt
 
-# COPY ./requirements.txt .
+RUN mkdir -p /workspace
 
-# RUN pip3 install -r requirements.txt
+WORKDIR /app
 
-WORKDIR /workspace
+COPY ./app .
 
 EXPOSE 8081
 

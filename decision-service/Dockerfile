@@ -12,6 +12,7 @@ RUN mkdir -p ./app
 
 COPY app/ ./app/
 
+# TODO Do not create the workspace here but in the devcontainer part. 
 RUN mkdir -p /workspace
 
 EXPOSE 8083

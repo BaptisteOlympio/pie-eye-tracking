@@ -40,7 +40,7 @@ class ProcessFrame() :
                     return
                 yield parts
         
-        async with grpc.aio.insecure_channel("172.26.128.105:8081") as channel :
+        async with grpc.aio.insecure_channel("openface-service:8081") as channel :
             stub = openfaceservice_pb2_grpc.OpenFaceServiceStub(channel)
             
             async for parts in _recv_multipart_async(self.socket_video_service):
@@ -79,5 +79,4 @@ class ProcessFrame() :
             
             
 
-process_frame = ProcessFrame(ip_vs="172.20.10.2", port_vs = "8080")
-    
+process_frame = ProcessFrame(ip_vs="172.20.10.4", port_vs = "8080")
