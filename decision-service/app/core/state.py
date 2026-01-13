@@ -21,3 +21,10 @@ class VideoStatus(str, Enum) :
 
 video_status = VideoStatus.NOT_RUNNING
 video_lock = asyncio.Lock()
+
+class VideoServiceConnection(str, Enum) :
+    CONNECTED = "connected"
+    DISCONNECTED = "disconnected"
+
+video_service_connection_status = VideoServiceConnection.DISCONNECTED
+video_service_connection_lock = asyncio.Lock()

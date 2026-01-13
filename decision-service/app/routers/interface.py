@@ -36,3 +36,4 @@ async def get_perf(background_tasks : BackgroundTasks) :
     background_tasks.add_task(perf.video_task)
     with open("app/templates/perf/index.html") as file : 
         return HTMLResponse(content=file.read())
+

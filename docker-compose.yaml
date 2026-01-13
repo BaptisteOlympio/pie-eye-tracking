@@ -1,25 +1,15 @@
 services:
-  video-service :
-    container_name : video-service
-    build : 
-      context : video-service/
-      dockerfile : Dockerfile
-    tty : True
-    command : ["bash"]
-  
+  decision-service:
+    image: decision-service:latest
+    ports:
+      - "8083:8083"
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8083"]
+
+
   openface-service : 
     container_name: openface-service
-    build: 
-      context: openface-service/
-      dockerfile: Dockerfile
+    image : openface-service:latest
+    ports:
+      - 8081
     tty: true
-    privileged: true
-    volumes:
-    #   - "${DATA_MOUNT}:${DATA_MOUNT}"
-    #   - ./:/workspace
-      - /dev/video0:/dev/video0
-    # ports:
-    #   - "8081:8081"
-    # environment:
-    #   DATA_MOUNT: "${DATA_MOUNT}"
-    command: ["bash"]
+    command: ["python3", "OpenFaceService.py"]

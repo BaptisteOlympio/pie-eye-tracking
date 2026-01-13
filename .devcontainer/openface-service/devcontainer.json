@@ -1,19 +1,11 @@
 {
   "name": "openface-service DevContainer",
-  // "build" : {
-  //   "dockerfile" : "../Dockerfile"
-  // },
-  "image": "openface_service:latest",
+  "image": "openface-service:latest",
   "workspaceFolder": "/workspace",
   "mounts": [
-    "source=${localWorkspaceFolder},target=/workspace,type=bind"
+    "source=${localWorkspaceFolder}/openface-service,target=/workspace,type=bind"
   ],
   "appPort" : ["8081:8081"],
-  "runArgs": [
-    "--privileged",
-    "-v",
-    "/dev/video0:/dev/video0"
-  ],
   "customizations": {
     "vscode": {
       "settings": {},

@@ -1,13 +1,12 @@
 {
   "name": "Decision Service DevContainer",
-  "build": {
-    "dockerfile": "../Dockerfile"
-  },
-  "workspaceFolder": "/workspace",
-  "mounts": [
-    "source=${localWorkspaceFolder},target=/workspace,type=bind"
+  "dockerComposeFile": [
+    "../../docker-compose.yaml",
+    "./docker-compose.devcontainer.yaml"
   ],
-  "appPort": ["8083:8083"],
+  "service": "decision-service",
+  "workspaceFolder": "/workspace",
+  "runServices": ["openface-service"],
   "customizations": {
     "vscode": {
       "settings": {},
@@ -18,6 +17,6 @@
       ]
     }
   },
-  "remoteUser": "vscode",
+  // "remoteUser": "boly",
   "updateRemoteUserUID": true
 }

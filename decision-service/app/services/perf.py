@@ -50,6 +50,6 @@ async def stream_video() :
             await asyncio.sleep(1/30)
             
         except Exception as e :
-            print(e)
+            # print(e)
             await asyncio.sleep(1)
             continue

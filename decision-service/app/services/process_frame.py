@@ -6,14 +6,20 @@ import numpy as np
 import sys
 sys.path.append("/workspace/app/services")
 import grpc
-import openfaceservice_pb2_grpc
-import openfaceservice_pb2
+import app.services.openfaceservice_pb2_grpc as openfaceservice_pb2_grpc
+import app.services.openfaceservice_pb2 as openfaceservice_pb2
+from app.core import state
 
 
 class ProcessFrame() :
-    def __init__(self, ip_vs, port_vs):
-        # Init de zmq
+    def __init__(self):
+        self.latest_frame = np.empty(shape=0)
+        self.latest_landmark = []
         self.context = zmq.asyncio.Context()
+    
+    def initializeConnection(self, ip_vs, port_vs) -> bool :
+        # Init de zmq
+        
         self.ip_vs = ip_vs
         self.port_vs = port_vs
         
@@ -24,10 +30,9 @@ class ProcessFrame() :
         uri = f"tcp://{ip_vs}:{port_vs}"
         
         self.socket_video_service.connect(uri)
-    
-        self.latest_frame = np.empty(shape=0)
-        self.latest_landmark = []
-        # self.latest_update = 0
+        # TODO Here check if the connection exist, otherwise return false, so far return true as we assume the connection exist
+        return True
+
     
     async def process_frame(self) :
         async def _recv_multipart_async(socket):
@@ -40,7 +45,7 @@ class ProcessFrame() :
                     return
                 yield parts
         
-        async with grpc.aio.insecure_channel("172.26.128.105:8081") as channel :
+        async with grpc.aio.insecure_channel("openface-service:8081") as channel :
             stub = openfaceservice_pb2_grpc.OpenFaceServiceStub(channel)
             
             async for parts in _recv_multipart_async(self.socket_video_service):
@@ -77,7 +82,19 @@ class ProcessFrame() :
                 
             print("loop finished")
             
-            
+process_frame = ProcessFrame()
 
-process_frame = ProcessFrame(ip_vs="172.20.10.2", port_vs = "8080")
+async def process_frame_task(ip_vs, port_vs) :
+    async with state.video_service_connection_lock :
+        if process_frame.initializeConnection(ip_vs=ip_vs, port_vs=port_vs) :
+            state.video_service_connection_status = state.VideoServiceConnection.CONNECTED
+        else :
+            # TODO Do something if the connection does not exist.
+            print("URI does not exist")
+            return
     
+    try :
+        await process_frame.process_frame()
+    finally :
+        async with state.video_service_connection_lock :
+            state.video_service_connection_status = state.VideoServiceConnection.DISCONNECTED
