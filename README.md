@@ -14,11 +14,55 @@ The core of the application is the eye-tracker model; it takes an image of a fac
 The project is organized into services. Each service has its own container. We focused on a modular approach where it easy to change technologies or language as required. 
 <img width="1156" height="394" alt="architecture-Simple Architecture drawio" src="https://github.com/user-attachments/assets/546958ff-9aa0-4272-973e-3e52edd6a142" />
 
-# Clone le projet
-Dans ce projet il y a en réalité deux projets github. Le projet principale pie-eye-tracking et une copie du projet original d'OpenFace. Pour cloner l'ensemble des deux projets : 
+
+# Install the project.
+## Coming soon
+Images will be soon online, no local building.
+
+## Clone
+Clone the project with all submodules :
 ```
 git clone --recurse-submodules https://github.com/BaptisteOlympio/pie-eye-tracking.git
 ```
+
+## Windows + WSL.
+The project is based on Docker container. You will need to build the container yourself. The build of OpenFace depends on the CPU architecture; it might not work for arm64 (Mac or Raspberry Pi).
+
+## Building image
+### OpenFace
+build openface images. This is the base image for openface-service : 
+```bash
+docker build -t openface:latest ./openface-service/OpenFace
+```
+
+### openface-service and decision-service
+```bash
+docker build -t openface-service:latest ./openface-service
+docker build -t decision-service:latest ./decision-service
+```
+
+### video-service
+Video-service is the service sending the frame to the application. I can't use the webcam in WSL for some reason, so I run the video-service not in the docker compose but on my windows. You can install all the requirements. 
+```bash
+pip install -r ./video-service/requirements.txt
+```
+
+# Start the project
+## Start openface-service and decision-service
+```bash
+docker compose up
+```
+The only available page is http://localhost:8083/interface/perf. 
+
+## Lauch video service
+To launch video-service with the webcam of windows : 
+```bash
+python video-service/app/sender.py --device 0
+```
+It will print on Windows the adress.
+
+Enter the ip and port in the page ``perf`` and send ip. The video with the landmark should appear.  
+
 
 
 
