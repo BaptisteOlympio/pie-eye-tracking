@@ -1,13 +1,13 @@
 services:
   decision-service:
-    image: decision-service:latest
+    image: bolympio/decision-service:latest
     ports:
       - "8083:8083"
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8083"]
 
   openface-service : 
     container_name: openface-service
-    image : openface-service:latest
+    image : bolympio/openface-service:latest
     ports:
       - 8081
     tty: true
