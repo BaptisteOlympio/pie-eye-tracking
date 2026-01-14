@@ -33,7 +33,7 @@ else :
 
 FPS = args.fps
 #TODO: a enlever
-FPS = 1 # On envoie une image toutes les secondes
+FPS = 2 # On envoie une image toutes les secondes
 HEIGHT = 640
 WIDTH = 480
 

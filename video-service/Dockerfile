@@ -13,5 +13,7 @@ WORKDIR /workspace
 
 COPY app/ app/
 COPY data/ data/
+# Copy juste pour les test le répertoire tes, a enlever
+COPY test/ test/
 
 EXPOSE 8080
