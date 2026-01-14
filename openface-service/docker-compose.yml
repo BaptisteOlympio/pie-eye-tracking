@@ -34,11 +34,11 @@ version: '3.7'
 
 services:
   openface:
-    image: openface-service
-    container_name: openface-service
+    image: openface-service-image
+    container_name: openface-servicee
     build: 
-      context: ./OpenFace/
-      dockerfile: /home/bolympio/pie/pie-eye-tracking/openface-service/OpenFacePythonLayer/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     tty: true
     privileged: true
     volumes:
