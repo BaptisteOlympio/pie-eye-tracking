@@ -1,4 +1,4 @@
-FROM openface:latest
+FROM bolympio/openface:latest
 
 # # # ## ================== Python layer ====================================
 
