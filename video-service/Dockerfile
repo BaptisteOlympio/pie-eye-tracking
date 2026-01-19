@@ -12,6 +12,5 @@ RUN pip install -r requirements.txt
 WORKDIR /workspace
 
 COPY app/ app/
-COPY data/ data/
 
 EXPOSE 8080
