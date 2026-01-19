@@ -1,4 +1,4 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" version="29.0.3" pages="2">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" version="29.0.3" pages="3">
   <diagram name="Architecture principale" id="qKirIHV49U5QL5PgmT9O">
     <mxGraphModel dx="1965" dy="2390" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -319,6 +319,134 @@
         <mxCell id="1WVS0CtEFoaclIxXO3UD-89" value="websocket ?type=visualsiation" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBorderColor=default;" parent="1WVS0CtEFoaclIxXO3UD-76" vertex="1" connectable="0">
           <mxGeometry x="-0.7434" y="2" relative="1" as="geometry">
             <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="Archi" id="60iFU7JbYfyVTCHHj99v">
+    <mxGraphModel dx="3227" dy="2558" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="6A81dpRE2VjgO77AiFTP-0" />
+        <mxCell id="6A81dpRE2VjgO77AiFTP-1" parent="6A81dpRE2VjgO77AiFTP-0" />
+        <mxCell id="6A81dpRE2VjgO77AiFTP-8" value="video-service" style="swimlane;whiteSpace=wrap;html=1;fontSize=20;" parent="6A81dpRE2VjgO77AiFTP-1" vertex="1">
+          <mxGeometry x="10" y="-360" width="330" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="6A81dpRE2VjgO77AiFTP-10" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=20;endArrow=diamond;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="6A81dpRE2VjgO77AiFTP-1" source="6A81dpRE2VjgO77AiFTP-12" target="6A81dpRE2VjgO77AiFTP-9" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-60" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6A81dpRE2VjgO77AiFTP-11" value="I/O Read" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=20;" parent="6A81dpRE2VjgO77AiFTP-10" vertex="1" connectable="0">
+          <mxGeometry x="-0.0462" y="3" relative="1" as="geometry">
+            <mxPoint x="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6A81dpRE2VjgO77AiFTP-12" value="Webcam" style="strokeColor=#dddddd;shadow=1;strokeWidth=1;rounded=1;absoluteArcSize=1;arcSize=2;labelPosition=center;verticalLabelPosition=middle;align=center;verticalAlign=bottom;spacingLeft=0;fontColor=#999999;fontSize=20;whiteSpace=wrap;spacingBottom=2;html=1;" parent="6A81dpRE2VjgO77AiFTP-1" vertex="1">
+          <mxGeometry x="-210" y="-240" width="110" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="6A81dpRE2VjgO77AiFTP-13" value="" style="sketch=0;dashed=0;connectable=0;html=1;fillColor=#757575;strokeColor=none;shape=mxgraph.gcp2.webcam;part=1;fontSize=20;" parent="6A81dpRE2VjgO77AiFTP-12" vertex="1">
+          <mxGeometry x="0.5" width="25" height="50" relative="1" as="geometry">
+            <mxPoint x="-12.5" y="10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6A81dpRE2VjgO77AiFTP-45" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=20;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" parent="6A81dpRE2VjgO77AiFTP-1" source="6A81dpRE2VjgO77AiFTP-9" target="hZV3_ekDiSJ8j4jN0Rp6-1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="670" y="90" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-0" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Protocol : ZMQ&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;Data : Frame&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="6A81dpRE2VjgO77AiFTP-45" vertex="1" connectable="0">
+          <mxGeometry x="-0.5355" relative="1" as="geometry">
+            <mxPoint x="68" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6A81dpRE2VjgO77AiFTP-47" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;decision-service&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;swimlaneFillColor=none;" parent="6A81dpRE2VjgO77AiFTP-1" vertex="1">
+          <mxGeometry x="630" y="-380" width="1830" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="6A81dpRE2VjgO77AiFTP-47" source="hZV3_ekDiSJ8j4jN0Rp6-1" target="hZV3_ekDiSJ8j4jN0Rp6-14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-18" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Writing&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="hZV3_ekDiSJ8j4jN0Rp6-17" vertex="1" connectable="0">
+          <mxGeometry x="-0.2718" y="-5" relative="1" as="geometry">
+            <mxPoint x="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-1" value="app/services/process_frame.py : ProcessFrame().process_frame()&lt;br&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Receive frame by ZMQ.&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Send the frame to openface-service to gRPC to be processed :&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Now we have landmarks and the frame, we write in a global variable so every process can read it.&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="label;whiteSpace=wrap;html=1;image=img/clipart/Gear_128x128.png;fontSize=20;" parent="6A81dpRE2VjgO77AiFTP-47" vertex="1">
+          <mxGeometry x="20" y="80" width="500" height="510" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-5" value="&lt;span style=&quot;font-size: 20px; text-align: left;&quot;&gt;`response = await stub.GetLandmark(frame)`&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="6A81dpRE2VjgO77AiFTP-47" vertex="1">
+          <mxGeometry x="80" y="330" width="420" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-13" value="Global Variable" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontSize=20;fillColor=#d5e8d4;strokeColor=#82b366;" parent="6A81dpRE2VjgO77AiFTP-47" vertex="1">
+          <mxGeometry x="610" y="290" width="290" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-14" value="latest_frame : np array" style="text;strokeColor=#82b366;fillColor=#d5e8d4;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=20;" parent="hZV3_ekDiSJ8j4jN0Rp6-13" vertex="1">
+          <mxGeometry y="30" width="290" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-15" value="latest_landmark : python list" style="text;strokeColor=#82b366;fillColor=#d5e8d4;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=19;" parent="hZV3_ekDiSJ8j4jN0Rp6-13" vertex="1">
+          <mxGeometry y="60" width="290" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-19" value="So here, latest_frame and latest_landmark. Every other task can read the last update from here. No need of each task call openface-service." style="text;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=19;" parent="hZV3_ekDiSJ8j4jN0Rp6-13" vertex="1">
+          <mxGeometry y="90" width="290" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-20" value="app/services/perf.py : video_task()&lt;div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Start stream_video(). This task read the latest_frame and latest_landmark, it draws the point of latest_landmark into latest_frame.&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;landmark + frame = frame_with_landmark.&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;frame_with_landmark is send to the frontend&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="label;whiteSpace=wrap;html=1;image=img/clipart/Gear_128x128.png;fontSize=20;" parent="6A81dpRE2VjgO77AiFTP-47" vertex="1">
+          <mxGeometry x="1030" y="40" width="760" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="6A81dpRE2VjgO77AiFTP-47" source="hZV3_ekDiSJ8j4jN0Rp6-14" target="hZV3_ekDiSJ8j4jN0Rp6-20" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-22" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Read&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="hZV3_ekDiSJ8j4jN0Rp6-21" vertex="1" connectable="0">
+          <mxGeometry x="0.2416" y="5" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6A81dpRE2VjgO77AiFTP-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#FF9933;strokeWidth=6;" parent="6A81dpRE2VjgO77AiFTP-1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2205" y="1080" />
+              <mxPoint x="1330" y="1080" />
+            </Array>
+            <mxPoint x="3945.2000000000007" y="790" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-2" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;openface-service&lt;/font&gt;" style="swimlane;whiteSpace=wrap;html=1;swimlaneFillColor=none;" parent="6A81dpRE2VjgO77AiFTP-1" vertex="1">
+          <mxGeometry x="270" y="620" width="800" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-3" value="app/OpenFaceService : OpenFaceService().GetLandmark()&lt;br&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Receive the frame, process it to get the landmark with pyopenface librairy :&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;`landmark = detector.landmarkinvideo(frame)`&lt;/span&gt;&lt;/div&gt;" style="label;whiteSpace=wrap;html=1;image=img/clipart/Gear_128x128.png;fontSize=20;" parent="hZV3_ekDiSJ8j4jN0Rp6-2" vertex="1">
+          <mxGeometry x="30" y="40" width="500" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;startArrow=none;startFill=0;startSize=9;strokeWidth=3;fillColor=#f8cecc;strokeColor=#b85450;" parent="6A81dpRE2VjgO77AiFTP-1" source="hZV3_ekDiSJ8j4jN0Rp6-5" target="hZV3_ekDiSJ8j4jN0Rp6-3" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="425" y="-35" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-8" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Protocol : gRPC&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;Data : Frame&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="hZV3_ekDiSJ8j4jN0Rp6-6" vertex="1" connectable="0">
+          <mxGeometry x="0.0719" y="-1" relative="1" as="geometry">
+            <mxPoint x="-4" y="27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="6A81dpRE2VjgO77AiFTP-1" source="hZV3_ekDiSJ8j4jN0Rp6-3" target="hZV3_ekDiSJ8j4jN0Rp6-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-10" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Protocol : gRPC&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;Data : List of landmark point&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="hZV3_ekDiSJ8j4jN0Rp6-9" vertex="1" connectable="0">
+          <mxGeometry x="-0.0211" y="-3" relative="1" as="geometry">
+            <mxPoint x="17" y="91" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6A81dpRE2VjgO77AiFTP-9" value="app/sender.py&lt;div&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;Read the device with OpenCV and create a publisher with zmq.&amp;nbsp;&lt;/span&gt;&lt;/div&gt;" style="label;whiteSpace=wrap;html=1;image=img/clipart/Gear_128x128.png;fontSize=20;" parent="6A81dpRE2VjgO77AiFTP-1" vertex="1">
+          <mxGeometry x="20" y="-320" width="310" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-23" value="&lt;font style=&quot;font-size: 30px;&quot;&gt;Frontend&lt;/font&gt;" style="dashed=0;outlineConnect=0;html=1;align=center;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.weblogos.html5" parent="6A81dpRE2VjgO77AiFTP-1" vertex="1">
+          <mxGeometry x="2880" y="-250" width="330" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="6A81dpRE2VjgO77AiFTP-1" source="hZV3_ekDiSJ8j4jN0Rp6-20" target="hZV3_ekDiSJ8j4jN0Rp6-23" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hZV3_ekDiSJ8j4jN0Rp6-25" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Protocol : Websocket&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;Data : frame_with_landmark&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="hZV3_ekDiSJ8j4jN0Rp6-24" vertex="1" connectable="0">
+          <mxGeometry x="-0.1328" relative="1" as="geometry">
+            <mxPoint x="-10" y="22" as="offset" />
           </mxGeometry>
         </mxCell>
       </root>
