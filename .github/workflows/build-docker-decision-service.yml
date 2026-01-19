@@ -1,11 +1,11 @@
-name: Build video-service
+name: Build decision-service
 
 on:
   push:
     branches: [ "main" ]
 
 env:
-  REGISTRY_IMAGE: bolympio/video-service
+  REGISTRY_IMAGE: bolympio/decision-service
 
 jobs:
   build:
@@ -46,7 +46,7 @@ jobs:
         id: build
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:video-service"
+          context: "{{defaultContext}}:decision-service"
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ env.REGISTRY_IMAGE }}
