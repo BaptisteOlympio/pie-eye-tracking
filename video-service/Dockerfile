@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
 RUN pip install -r requirements.txt
 
-WORKDIR /workspace
+WORKDIR /app
 
-COPY app/ app/
+COPY app/ .
 
 EXPOSE 8080

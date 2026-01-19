@@ -1,5 +1,6 @@
 services:
   decision-service:
+    build: ./decision-service/
     working_dir: /workspace
     volumes:
       - ./decision-service:/workspace

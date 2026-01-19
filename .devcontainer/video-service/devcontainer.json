@@ -1,11 +1,11 @@
 {
   "name": "Video Service DevContainer",
   "build": {
-    "dockerfile": "../Dockerfile"
+    "dockerfile": "../../video-service/Dockerfile"
   },
   "workspaceFolder": "/workspace",
   "mounts": [
-    "source=${localWorkspaceFolder},target=/workspace,type=bind"
+    "source=${localWorkspaceFolder}/video-service,target=/workspace,type=bind"
   ],
   "appPort": ["8080:8080"],
   "customizations": {
