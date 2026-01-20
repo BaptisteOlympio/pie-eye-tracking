@@ -12,7 +12,8 @@
       "extensions": [
         "ms-python.vscode-pylance",
         "ms-azuretools.vscode-docker",
-        "sankethdev.vscode-proto"
+        "sankethdev.vscode-proto",
+        "mechatroner.rainbow-csv"
       ]
     }
   }
