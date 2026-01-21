@@ -2,7 +2,10 @@
 *.mp4
 *.jpg
 *.csv
+*.avi
+*.hog
 *.txt
+*.bmp
 *.pyc
 __pycache__
 .$architecture.drawio.bkp
@@ -13,3 +16,5 @@ openface-service/script_test/grpc
 *.hog
 *.avi
 openface-service/script_test/grpc
+.vscode/settings.json
+*.DS_Store
