@@ -1,0 +1,23 @@
+{
+  "name": "Video Service DevContainer",
+  "build": {
+    "dockerfile": "../../video-service/Dockerfile"
+  },
+  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=${localWorkspaceFolder}/video-service,target=/workspace,type=bind"
+  ],
+  "runArgs": [
+    "--network", "zmq_net"
+  ],
+  "appPort": ["8080:8080"],
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  }
+}

@@ -9,11 +9,15 @@ RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
 RUN pip install -r requirements.txt
 
-WORKDIR /workspace
+WORKDIR /app
 
+<<<<<<< HEAD
 COPY app/ app/
 COPY data/ data/
 # Copy juste pour les test le répertoire tes, a enlever
 COPY test/ test/
+=======
+COPY app/ .
+>>>>>>> main
 
 EXPOSE 8080

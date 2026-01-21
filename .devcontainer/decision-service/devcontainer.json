@@ -1,0 +1,35 @@
+{
+  "name": "Decision Service DevContainer",
+  "dockerComposeFile": [
+    "../../docker-compose.yaml",
+    "./docker-compose.devcontainer.yaml"
+  ],
+<<<<<<< HEAD:decision-service/.devcontainer/devcontainer.json
+  "appPort": ["8083:8083"],
+  "runArgs": [
+    "--name", "decision-service",
+    "--network", "zmq_net"
+  ],
+=======
+  "service": "decision-service",
+  "workspaceFolder": "/workspace",
+  "runServices": ["openface-service"],
+>>>>>>> main:.devcontainer/decision-service/devcontainer.json
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker",
+        "firefox-devtools.vscode-firefox-debug"
+      ]
+    }
+<<<<<<< HEAD:decision-service/.devcontainer/devcontainer.json
+  }
+}
+=======
+  },
+  // "remoteUser": "boly",
+  "updateRemoteUserUID": true
+}
+>>>>>>> main:.devcontainer/decision-service/devcontainer.json

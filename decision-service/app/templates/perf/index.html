@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Video Stream</title>
+</head>
+<body>
+  <h1>Perf</h1>
+
+  <div id="ip_port_box">
+    <input type="text" id="ip" placeholder="adresse ip video service...">
+    <input type="text" id="port" placeholder="port video service...">
+    <button onclick="send_ip()">Send IP</button>
+    <div id="response"></div>
+  </div>
+  
+  
+  
+
+  <script>
+    async function send_ip() {
+      const ip = document.getElementById("ip").value;
+      const port = document.getElementById("port").value;
+
+      const response = await fetch("/connect_video_service", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ip: ip, port: port})
+      });
+      const data = await response.json()
+      document.getElementById("response").innerText = data.status;
+    }
+  </script>
+
+  
+
+  <img id="video" width="640" />
+
+  <script>
+    const ws = new WebSocket(`ws://${location.host}/ws?type=video`);
+    ws.binaryType = "arraybuffer";
+
+    ws.onmessage = (event) => {
+      const blob = new Blob([event.data], { type: "image/jpeg" });
+      const url = URL.createObjectURL(blob);
+      const img = document.getElementById("video");
+      img.src = url;
+    };
+  </script>
+</body>
+</html>
