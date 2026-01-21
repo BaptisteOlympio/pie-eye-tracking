@@ -18,23 +18,13 @@ parser.add_argument("--port", type=int, default=8080)
 parser.add_argument("--fps", type=int, default=30)
 args = parser.parse_args()
 
-# On récupère l'adresse ip de la machine hôte
-
-system = platform.system()
-
-if system == "Windows" :
-    command = "Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress"
-    result = subprocess.run(["powershell.exe", command], capture_output=True, text=True)
-    ipadress = result.stdout[:-1]
-else :
-    ipadress = "*"
 # On charge les variables
 
 stream_loop = args.stream_loop
 video_path = args.input_file 
 port = args.port
-uri = f"tcp://{ipadress}:{port}"
-device = args.device
+uri = f"tcp://*:{port}"
+device = args.device # 0si on veut récupérer la webcam de l'app areil 
 
 if device == -1 : 
     input_video = video_path
@@ -42,6 +32,8 @@ else :
     input_video = device
 
 FPS = args.fps
+#TODO: a enlever
+FPS = 2 # On envoie une image toutes les secondes
 HEIGHT = 640
 WIDTH = 480
 
@@ -61,11 +53,13 @@ async def sender():
             while True:
                 ret, frame = cap.read()
                 if not ret:
+                    print("Fin de la vidéo")
                     break
                 # Downscale if needed
                 frame = cv2.resize(frame, (HEIGHT, WIDTH))
                 frame = np.flip(frame, axis=1)
-                # print(frame.shape)
+
+                print(frame)
                 await socket.send_multipart([
                     str(frame.dtype).encode(),
                     str(frame.shape).encode(),
@@ -76,6 +70,7 @@ async def sender():
             cap.release()
         
         if not(stream_loop) : 
+            print("test")
             break
 
 asyncio.run(sender())

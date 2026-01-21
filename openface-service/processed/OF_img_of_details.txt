@@ -1,0 +1,13 @@
+Input:./current_img.png
+Input full path:/workspace/current_img.png
+Camera parameters:500,500,320,240
+Output HOG:OF_img.hog
+Output video:OF_img.avi
+Output aligned directory:OF_img_aligned
+Output csv:OF_img.csv
+Gaze: 1
+AUs: 1
+Landmarks 2D: 1
+Landmarks 3D: 1
+Pose: 1
+Shape parameters: 1

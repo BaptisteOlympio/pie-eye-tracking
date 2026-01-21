@@ -1,0 +1,27 @@
+{
+  "name": "OpenFace DevContainer",
+  "build" : {
+    "dockerfile" : "../Dockerfile"
+  },
+  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind"
+  ],
+  "appPort" : ["8081:8081"],
+  "runArgs": [
+    "--privileged",
+    "-v",
+    "/dev/video0:/dev/video0",
+    "--network", "zmq_net",
+    "--name", "openface-service"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  }
+}

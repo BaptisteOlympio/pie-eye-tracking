@@ -11,6 +11,13 @@ RUN pip install -r requirements.txt
 
 WORKDIR /app
 
+<<<<<<< HEAD
+COPY app/ app/
+COPY data/ data/
+# Copy juste pour les test le répertoire tes, a enlever
+COPY test/ test/
+=======
 COPY app/ .
+>>>>>>> main
 
 EXPOSE 8080
