@@ -2,6 +2,8 @@
 *.mp4
 *.jpg
 *.csv
+*.avi
+*.hog
 *.txt
 *.pyc
 __pycache__
