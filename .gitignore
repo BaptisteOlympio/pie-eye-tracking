@@ -5,6 +5,7 @@
 *.avi
 *.hog
 *.txt
+*.bmp
 *.pyc
 __pycache__
 .$architecture.drawio.bkp
