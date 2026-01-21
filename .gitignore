@@ -17,4 +17,4 @@ openface-service/script_test/grpc
 *.avi
 openface-service/script_test/grpc
 .vscode/settings.json
-openface-service.DS_Store
+*.DS_Store
