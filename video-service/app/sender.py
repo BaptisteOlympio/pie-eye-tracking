@@ -6,7 +6,7 @@ import argparse
 import platform
 import subprocess
 import numpy as np
-
+from utils import get_ip_adress
 # On récupère les arguments 
 
 parser = argparse.ArgumentParser()
@@ -18,12 +18,15 @@ parser.add_argument("--port", type=int, default=8080)
 parser.add_argument("--fps", type=int, default=30)
 args = parser.parse_args()
 
+
+ip_adress = get_ip_adress()
+print(f"IP adress detected : {ip_adress}")
 # On charge les variables
 
 stream_loop = args.stream_loop
 video_path = args.input_file 
 port = args.port
-uri = f"tcp://*:{port}"
+uri = f"tcp://{ip_adress}:{port}"
 device = args.device # 0si on veut récupérer la webcam de l'app areil 
 
 if device == -1 : 
