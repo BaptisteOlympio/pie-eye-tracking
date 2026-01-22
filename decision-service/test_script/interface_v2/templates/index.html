@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Interface Pilote Modulaire</title>
+    <style>
+        /* --- DESIGN (Inchangé : Camembert & Néon) --- */
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 400px; height: 400px;
+        }
+
+        .segment {
+            position: absolute;
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-weight: bold; color: #888;
+            background-color: #2a2a2a; 
+            border: 4px solid #444;
+            transition: transform 0.1s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .seg-up    { top: 0; left: 150px; }
+        .seg-down  { bottom: 0; left: 150px; }
+        .seg-left  { left: 0; top: 150px; }
+        .seg-right { right: 0; top: 150px; }
+        .seg-center { 
+            top: 150px; left: 150px; width: 90px; height: 90px; 
+            border-color: #666; z-index: 10; font-size: 0.8rem;
+        }
+
+        /* Classe ajoutée quand la décision est VALIDÉE (Vert plein) */
+        .validated {
+            background-color: #4CAF50 !important;
+            box-shadow: 0 0 30px #4CAF50, 0 0 60px #4CAF50;
+            border-color: #fff;
+            color: #fff;
+            transform: scale(1.15);
+            z-index: 20;
+        }
+
+        .info-text { margin-top: 50px; color: #666; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div class="wheel-container">
+        <div id="UP"    class="segment seg-up">HAUT</div>
+        <div id="LEFT"  class="segment seg-left">GAUCHE</div>
+        <div id="RIGHT" class="segment seg-right">DROITE</div>
+        <div id="DOWN"  class="segment seg-down">BAS</div>
+        <div id="CENTER" class="segment seg-center">Wait</div>
+    </div>
+
+    <p class="info-text">Mode: <span id="mode-display">...</span></p>
+
+    <script>
+        var ws_protocol = (window.location.protocol === 'https:') ? 'wss://' : 'ws://';
+        var ws = new WebSocket(ws_protocol + window.location.host + "/ws");
+
+        // ============================================================
+        // PARTIE 1 : AFFICHAGE (VIEW)
+        // C'est la seule partie utile pour la version finale.
+        // Elle écoute le Python et met à jour l'écran.
+        // ============================================================
+        
+        ws.onmessage = function(event) {
+            var data = JSON.parse(event.data);
+            
+            var dir = data.direction;      // "UP", "DOWN", "CENTER"
+            var percent = data.percent;    // 0 à 100
+            var isValid = data.validated;  // "UP" ou null
+
+            // 1. Reset visuel (nettoyage)
+            document.querySelectorAll('.segment').forEach(el => {
+                if(el.id !== dir) {
+                    el.style.background = "#2a2a2a"; 
+                    el.classList.remove('validated');
+                    if (el.id !== "CENTER") el.innerText = el.id;
+                }
+            });
+
+            // 2. Mise à jour du segment actif
+            var activeEl = document.getElementById(dir);
+            
+            if (activeEl && dir !== "CENTER") {
+                // Si validé : FLASH VERT
+                if (isValid) {
+                    activeEl.classList.add('validated');
+                    activeEl.style.background = "#4CAF50";
+                    activeEl.innerText = "OK";
+                } 
+                // Sinon : PROGRESSION (Camembert)
+                else {
+                    activeEl.classList.remove('validated');
+                    // Remplissage dynamique via CSS conic-gradient
+                    activeEl.style.background = `conic-gradient(#4CAF50 ${percent}%, #2a2a2a ${percent}%)`;
+                    activeEl.innerText = Math.floor(percent) + "%";
+                }
+            } else {
+                document.getElementById("CENTER").innerText = "Wait";
+            }
+        };
+
+        ws.onopen = function() { document.getElementById("mode-display").innerText = "Connecté au Driver Python"; };
+        ws.onclose = function() { document.getElementById("mode-display").innerText = "Déconnecté"; };
+
+        // ============================================================
+        // PARTIE 2 : SIMULATION (DEBUG INPUT)
+        // Cette partie sert UNIQUEMENT à remplacer l'eye-tracker manquant.
+        // À supprimer le jour où le Python utilise ZMQDriver.
+        // ============================================================
+
+        function sendSimulation(dir) {
+            if(ws.readyState === WebSocket.OPEN) {
+                // On envoie un ordre au "KeyboardDriver" côté Python
+                ws.send(JSON.stringify({ "set_direction": dir }));
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === "ArrowUp")    sendSimulation("UP");
+            if (e.code === "ArrowDown")  sendSimulation("DOWN");
+            if (e.code === "ArrowLeft")  sendSimulation("LEFT");
+            if (e.code === "ArrowRight") sendSimulation("RIGHT");
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) {
+                sendSimulation("CENTER");
+            }
+        });
+
+    </script>
+</body>
+</html>
