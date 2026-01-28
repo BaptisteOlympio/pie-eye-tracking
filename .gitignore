@@ -13,3 +13,4 @@ openface-service/script_test/grpc
 *.hog
 *.avi
 openface-service/script_test/grpc
+*.DS_Store

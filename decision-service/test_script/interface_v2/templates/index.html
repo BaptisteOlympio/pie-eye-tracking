@@ -2,145 +2,161 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Interface Pilote Modulaire</title>
+    <title>Interface avec Descriptions</title>
     <style>
-        /* --- DESIGN (Inchangé : Camembert & Néon) --- */
+        /* --- STYLE GLOBAL --- */
         body {
             background-color: #121212;
             color: white;
             font-family: 'Segoe UI', sans-serif;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            height: 100vh; margin: 0; overflow: hidden;
+            margin: 0; height: 100vh; width: 100vw; overflow: hidden;
         }
 
-        .wheel-container {
-            position: relative;
-            width: 400px; height: 400px;
+        /* --- LA GRILLE (3x3) --- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            height: 100%; width: 100%;
         }
 
+        .grid-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* border: 1px solid rgba(255, 255, 255, 0.05);  Optionnel : voir les cases */
+        }
+
+        /* --- NOUVEAU : LE GROUPE (Bouton + Texte) --- */
+        .action-group {
+            display: flex;
+            flex-direction: column; /* Empile le texte et le bouton */
+            align-items: center;
+            gap: 15px; /* Espace entre le texte et le bouton */
+        }
+
+        /* --- NOUVEAU : LE LABEL (Texte descriptif) --- */
+        .action-label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #4CAF50; /* Vert pour bien ressortir */
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* --- LES CAMEMBERTS --- */
         .segment {
-            position: absolute;
-            width: 100px; height: 100px;
+            width: 200px;  /* Un peu réduit pour laisser place au texte */
+            height: 200px;
             border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            font-weight: bold; color: #888;
+            font-weight: bold; font-size: 1.2rem; color: #666;
             background-color: #2a2a2a; 
-            border: 4px solid #444;
-            transition: transform 0.1s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            border: 6px solid #444;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
 
-        .seg-up    { top: 0; left: 150px; }
-        .seg-down  { bottom: 0; left: 150px; }
-        .seg-left  { left: 0; top: 150px; }
-        .seg-right { right: 0; top: 150px; }
-        .seg-center { 
-            top: 150px; left: 150px; width: 90px; height: 90px; 
-            border-color: #666; z-index: 10; font-size: 0.8rem;
-        }
+        #CENTER { width: 160px; height: 160px; border-color: #666; font-size: 1rem; color: #888; }
 
-        /* Classe ajoutée quand la décision est VALIDÉE (Vert plein) */
+        /* --- VALIDATION --- */
         .validated {
             background-color: #4CAF50 !important;
-            box-shadow: 0 0 30px #4CAF50, 0 0 60px #4CAF50;
-            border-color: #fff;
-            color: #fff;
-            transform: scale(1.15);
-            z-index: 20;
+            box-shadow: 0 0 50px #4CAF50 !important;
+            border-color: #fff; color: #fff;
+            transform: scale(1.1); z-index: 20;
         }
 
-        .info-text { margin-top: 50px; color: #666; font-style: italic; }
+        /* --- DEBUG --- */
+        .debug-area { align-items: flex-end !important; justify-content: flex-start !important; padding: 20px; }
+        .debug-text { font-family: monospace; color: #4CAF50; opacity: 0.7; }
     </style>
 </head>
 <body>
 
-    <div class="wheel-container">
-        <div id="UP"    class="segment seg-up">HAUT</div>
-        <div id="LEFT"  class="segment seg-left">GAUCHE</div>
-        <div id="RIGHT" class="segment seg-right">DROITE</div>
-        <div id="DOWN"  class="segment seg-down">BAS</div>
-        <div id="CENTER" class="segment seg-center">Wait</div>
-    </div>
+    <div class="main-grid">
+        
+        <div class="grid-cell"></div>
+        
+        <div class="grid-cell">
+            <div class="action-group">
+                <span class="action-label">Monter le Volume</span> <div id="UP" class="segment">HAUT</div>
+            </div>
+        </div>
+        
+        <div class="grid-cell"></div>
 
-    <p class="info-text">Mode: <span id="mode-display">...</span></p>
+        <div class="grid-cell">
+            <div class="action-group">
+                <div id="LEFT" class="segment">GAUCHE</div>
+                <span class="action-label">Précédent</span> </div>
+        </div>
+
+        <div class="grid-cell">
+            <div id="CENTER" class="segment">Attente</div>
+        </div>
+
+        <div class="grid-cell">
+            <div class="action-group">
+                <div id="RIGHT" class="segment">DROITE</div>
+                <span class="action-label">Suivant</span> </div>
+        </div>
+
+        <div class="grid-cell debug-area">
+            <div id="debug-text" class="debug-text">Init...</div>
+        </div>
+
+        <div class="grid-cell">
+            <div class="action-group">
+                <div id="DOWN" class="segment">BAS</div>
+                <span class="action-label">Baisser le Volume</span> </div>
+        </div>
+
+        <div class="grid-cell"></div>
+    </div>
 
     <script>
         var ws_protocol = (window.location.protocol === 'https:') ? 'wss://' : 'ws://';
         var ws = new WebSocket(ws_protocol + window.location.host + "/ws");
 
-        // ============================================================
-        // PARTIE 1 : AFFICHAGE (VIEW)
-        // C'est la seule partie utile pour la version finale.
-        // Elle écoute le Python et met à jour l'écran.
-        // ============================================================
-        
         ws.onmessage = function(event) {
             var data = JSON.parse(event.data);
-            
-            var dir = data.direction;      // "UP", "DOWN", "CENTER"
-            var percent = data.percent;    // 0 à 100
-            var isValid = data.validated;  // "UP" ou null
+            var dir = data.direction;
+            var percent = data.percent;
+            var isValid = data.validated;
 
-            // 1. Reset visuel (nettoyage)
-            document.querySelectorAll('.segment').forEach(el => {
-                if(el.id !== dir) {
-                    el.style.background = "#2a2a2a"; 
+            document.getElementById("debug-text").innerHTML = "INPUT: " + (data.debug_info || dir);
+
+            var allSegments = ["UP", "DOWN", "LEFT", "RIGHT", "CENTER"];
+            
+            allSegments.forEach(function(segmentId) {
+                var el = document.getElementById(segmentId);
+                if (!el) return;
+
+                if (segmentId === dir && dir !== "CENTER") {
+                    if (isValid) {
+                        el.classList.add('validated');
+                        el.style.background = "#4CAF50";
+                        el.innerText = "OK";
+                    } else {
+                        el.classList.remove('validated');
+                        el.style.background = `conic-gradient(#4CAF50 ${percent}%, #2a2a2a ${percent}%)`;
+                        el.innerText = Math.floor(percent) + "%";
+                        el.style.color = "white";
+                    }
+                } else {
                     el.classList.remove('validated');
-                    if (el.id !== "CENTER") el.innerText = el.id;
+                    el.style.background = "#2a2a2a";
+                    if (segmentId !== "CENTER") {
+                        el.innerText = segmentId; 
+                        el.style.color = "#666";
+                    } else {
+                        el.innerText = "Attente";
+                    }
                 }
             });
-
-            // 2. Mise à jour du segment actif
-            var activeEl = document.getElementById(dir);
-            
-            if (activeEl && dir !== "CENTER") {
-                // Si validé : FLASH VERT
-                if (isValid) {
-                    activeEl.classList.add('validated');
-                    activeEl.style.background = "#4CAF50";
-                    activeEl.innerText = "OK";
-                } 
-                // Sinon : PROGRESSION (Camembert)
-                else {
-                    activeEl.classList.remove('validated');
-                    // Remplissage dynamique via CSS conic-gradient
-                    activeEl.style.background = `conic-gradient(#4CAF50 ${percent}%, #2a2a2a ${percent}%)`;
-                    activeEl.innerText = Math.floor(percent) + "%";
-                }
-            } else {
-                document.getElementById("CENTER").innerText = "Wait";
-            }
         };
-
-        ws.onopen = function() { document.getElementById("mode-display").innerText = "Connecté au Driver Python"; };
-        ws.onclose = function() { document.getElementById("mode-display").innerText = "Déconnecté"; };
-
-        // ============================================================
-        // PARTIE 2 : SIMULATION (DEBUG INPUT)
-        // Cette partie sert UNIQUEMENT à remplacer l'eye-tracker manquant.
-        // À supprimer le jour où le Python utilise ZMQDriver.
-        // ============================================================
-
-        function sendSimulation(dir) {
-            if(ws.readyState === WebSocket.OPEN) {
-                // On envoie un ordre au "KeyboardDriver" côté Python
-                ws.send(JSON.stringify({ "set_direction": dir }));
-            }
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.code === "ArrowUp")    sendSimulation("UP");
-            if (e.code === "ArrowDown")  sendSimulation("DOWN");
-            if (e.code === "ArrowLeft")  sendSimulation("LEFT");
-            if (e.code === "ArrowRight") sendSimulation("RIGHT");
-        });
-
-        document.addEventListener('keyup', (e) => {
-            if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) {
-                sendSimulation("CENTER");
-            }
-        });
-
     </script>
 </body>
 </html>

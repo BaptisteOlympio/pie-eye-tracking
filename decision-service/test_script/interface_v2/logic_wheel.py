@@ -1,45 +1,78 @@
 class DecisionWheel:
-    def __init__(self, seuil_validation=4):
-        self.seuil = seuil_validation  # Nombre de "ticks" pour valider
-        self.compteur = 0             # Où on en est (ex: 2/4)
+    def __init__(self, seuil_validation=4, buffer_limit=2):
+        self.seuil = seuil_validation      # Ex: 4 ticks pour 100%
+        self.buffer_limit = buffer_limit   # Ex: 2 ticks de tolérance
+        
+        self.compteur = 0
+        self.buffer_compteur = 0
         self.direction_en_cours = "CENTER"
-        self.decision_validee = None  # Stockera la décision finale (ex: "UP") une fois validée
+        self.decision_validee = None
 
     def update(self, raw_input_direction):
         """
-        Reçoit la direction brute du clavier (fake_decision)
-        Retourne un dictionnaire avec l'état de la roue.
+        Logique de Résilience Totale :
+        Si on a commencé quelque chose, on ne l'annule JAMAIS tout de suite.
+        On utilise toujours le buffer.
         """
         
-        # 1. Si l'utilisateur regarde au CENTRE (il ne fait rien)
-        if raw_input_direction == "CENTER":
-            self.compteur = 0
-            self.direction_en_cours = "CENTER"
-            self.decision_validee = None
+        # 1. EST-CE QU'ON CONTINUE DANS LA MÊME DIRECTION ?
+        if raw_input_direction == self.direction_en_cours:
+            # Oui -> Tout va bien, on reset le stress (buffer)
+            self.buffer_compteur = 0
             
-        # 2. Si l'utilisateur continue dans la MÊME direction
-        elif raw_input_direction == self.direction_en_cours:
-            if self.compteur < self.seuil:
-                self.compteur += 1
-            
-            # Si on atteint le seuil, on valide !
-            if self.compteur >= self.seuil:
-                self.decision_validee = raw_input_direction
+            # On continue de remplir (si ce n'est pas le centre)
+            if self.direction_en_cours != "CENTER":
+                if self.compteur < self.seuil:
+                    self.compteur += 1
+                
+                # Validation ?
+                if self.compteur >= self.seuil:
+                    self.decision_validee = self.direction_en_cours
 
-        # 3. Si l'utilisateur CHANGE de direction
+        # 2. NON, LE REGARD A CHANGÉ (Centre, autre direction, erreur...)
         else:
-            # On remet le compteur à 1 pour la nouvelle direction
-            self.direction_en_cours = raw_input_direction
-            self.compteur = 1
-            self.decision_validee = None
+            # Est-ce qu'on avait du progrès à protéger ?
+            if self.compteur > 0:
+                # OUI -> ON ACTIVE LE BUFFER (PROTECTION)
+                self.buffer_compteur += 1
+                
+                # Tant qu'on est dans la tolérance, ON NE BOUGE PAS.
+                # On ignore le nouvel input, on garde l'ancienne direction figée.
+                if self.buffer_compteur <= self.buffer_limit:
+                    pass # On est en PAUSE
+                
+                # Si on a dépassé la tolérance, c'est perdu.
+                else:
+                    self._switch_direction(raw_input_direction)
+            
+            # Non, on était déjà à 0 (Centre)
+            else:
+                # Alors on peut changer tout de suite (c'est un nouveau démarrage)
+                self._switch_direction(raw_input_direction)
 
-        # On renvoie les infos pour l'interface graphique
+        # Calcul du pourcentage pour l'affichage
+        percent = 0
+        if self.seuil > 0:
+            percent = (self.compteur / self.seuil) * 100
+
+        # On retourne l'état
         return {
-            "direction": self.direction_en_cours,
-            "progress": self.compteur,         # Ex: 2
-            "progress_max": self.seuil,        # Ex: 4
-            "percent": (self.compteur / self.seuil) * 100, # Ex: 50%
-            "validated": self.decision_validee # Ex: "UP" ou None
+            "direction": self.direction_en_cours, # On renvoie ce qu'on a en mémoire (pas forcément l'input)
+            "percent": percent,
+            "validated": self.decision_validee,
+            # Info utile : Est-ce qu'on est en train d'utiliser le buffer ?
+            "status": "PAUSE" if (self.buffer_compteur > 0 and self.compteur > 0) else "RUNNING"
         }
 
-
+    def _switch_direction(self, new_dir):
+        """Réinitialisation propre"""
+        self.direction_en_cours = new_dir
+        self.buffer_compteur = 0
+        self.decision_validee = None
+        
+        # Si on regarde ailleurs que le centre, on commence direct à 1 (25%)
+        # Sinon on se met à 0
+        if new_dir != "CENTER":
+            self.compteur = 1
+        else:
+            self.compteur = 0

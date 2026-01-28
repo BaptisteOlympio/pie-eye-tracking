@@ -1,98 +1,66 @@
 import asyncio
 import json
 import os
-import time
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 
-# Import de ta logique métier (indépendant de la source)
+
 from logic_wheel import DecisionWheel
+#pour simuler une séquence d'envoie (plus de clavier, fake_decision.py envoie une direction de regard à l'app)
+from fake_decision import FakeListDriver
 
 app = FastAPI()
 
 # ==============================================================================
-# 1. COUCHE D'ABSTRACTION (INPUT)
+# PARAMÈTRES DE L'APPLICATION
 # ==============================================================================
 
-class GazeDriver:
-    """Classe parent générique. Toute nouvelle source de données devra hériter de ça."""
-    def get_gaze_data(self):
-        """Doit retourner un dict: {'direction': str, 'face_id': int, ...}"""
-        raise NotImplementedError("Chaque pilote doit implémenter cette méthode")
+# fréq de lecture du système : 4.0 Hz = 4 lectures par seconde (donc 1 incrément toutes les 0.25s)
+FREQUENCE_LECTURE = 1 
 
 # ==============================================================================
-# 2. PILOTE A : SIMULATEUR CLAVIER (Ce qu'on utilise aujourd'hui)
+# BOUCLE PRINCIPALE
 # ==============================================================================
 
-class KeyboardDriver(GazeDriver):
-    def __init__(self):
-        self.current_direction = "CENTER"
-        print(">>> PILOTE ACTIVÉ : CLAVIER (Simulation Web)")
-
-    def set_direction(self, direction: str):
-        """Méthode spécifique pour recevoir l'ordre du Web"""
-        self.current_direction = direction
-
-    def get_gaze_data(self):
-        # On formate comme si ça venait du vrai tracker
-        return {
-            "direction": self.current_direction,
-            "face_id": 0, 
-            "timestamp": time.time()
-        }
-
-# ==============================================================================
-# 3. PILOTE B : VRAI TRACKER (Ce que tu utiliseras demain)
-# ==============================================================================
-
-class ZMQInputDriver(GazeDriver):
-    def __init__(self):
-        # Ici tu mettras ton code de connexion (ex: zmq.Context(), socket...)
-        print(">>> PILOTE ACTIVÉ : VRAI TRACKER (ZMQ)")
-        pass
-
-    def get_gaze_data(self):
-        # Ici tu mettras : return socket.recv_json()
-        return {"direction": "CENTER"} # Placeholder
-
-# ==============================================================================
-# 4. CONFIGURATION DU PILOTE ACTIF
-# ==============================================================================
-
-# C'est LA SEULE LIGNE à changer pour passer du clavier à la réalité !
-active_driver = KeyboardDriver()
-# active_driver = ZMQInputDriver() 
-
-# ==============================================================================
-# 5. BOUCLE PRINCIPALE (CERVEAU)
-# ==============================================================================
-
-async def run_decision_logic():
-    print(">>> Démarrage de la Logique Métier")
+async def run_app_logic():
+    print(f">>> Démarrage de l'App (Fréquence: {FREQUENCE_LECTURE} Hz)")
     
-    # Paramétrage de la roue (Logique pure)
-    wheel = DecisionWheel(seuil_validation=20)
+    # Initialisation des composants
+    driver = FakeListDriver()             
+    wheel = DecisionWheel(seuil_validation=4, buffer_limit=3) 
+    # Calcul du temps de pause (ex: 1/4 = 0.25 sec)
+    sleep_time = 1.0 / FREQUENCE_LECTURE
     
     try:
         while True:
-            # A. ACQUISITION : On demande au pilote actif (peu importe qui c'est)
-            raw_data = active_driver.get_gaze_data()
+            # -------------------------------------------------------
+            # ÉTAPE 1 : INPUT (On récupère juste UNE direction donc soit haut, soit gauche, soit bas, soit droite)
+            # -------------------------------------------------------
+            current_direction = driver.get_next_direction()
             
-            # B. TRAITEMENT : On donne la direction brute à la roue
-            # La roue gère le comptage, le seuil, la validation...
-            wheel_result = wheel.update(raw_data['direction'])
+            # -------------------------------------------------------
+            # ÉTAPE 2 : LOGIQUE (On met à jour la roue)
+            # -------------------------------------------------------
+            wheel_result = wheel.update(current_direction)
             
-            # C. DIFFUSION : On envoie le résultat visuel au HTML
+            # -------------------------------------------------------
+            # ÉTAPE 3 : OUTPUT (On envoie à l'écran)
+            # -------------------------------------------------------
+            # On ajoute l'info debug pour voir ce qui entre
+            wheel_result["debug_info"] = f"Input reçu: {current_direction}"
+            
             await manager.broadcast(json.dumps(wheel_result))
             
-            # Cadence (20Hz)
-            await asyncio.sleep(0.05)
+            # -------------------------------------------------------
+            # ÉTAPE 4 : FRÉQUENCE (On attend le prochain cycle)
+            # -------------------------------------------------------
+            await asyncio.sleep(sleep_time)
             
     except Exception as e:
-        print(f"Erreur critique dans la boucle logique: {e}")
+        print(f"Erreur App: {e}")
 
 # ==============================================================================
-# 6. INFRASTRUCTURE WEB (AFFICHAGE & ROUTING)
+# INFRASTRUCTURE WEB 
 # ==============================================================================
 
 class ConnectionManager:
@@ -112,11 +80,10 @@ manager = ConnectionManager()
 
 @app.on_event("startup")
 async def startup_event():
-    asyncio.create_task(run_decision_logic())
+    asyncio.create_task(run_app_logic())
 
 @app.get("/")
 async def get():
-    # Sert le fichier HTML (Vue)
     base_dir = os.path.dirname(os.path.abspath(__file__))
     html_path = os.path.join(base_dir, "templates", "index.html")
     with open(html_path, "r", encoding="utf-8") as f:
@@ -127,14 +94,6 @@ async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     try:
         while True:
-            # Réception des messages venant du HTML
-            data = await websocket.receive_text()
-            
-            # Si on est en mode Clavier, on met à jour le pilote
-            if isinstance(active_driver, KeyboardDriver):
-                cmd = json.loads(data)
-                if "set_direction" in cmd:
-                    active_driver.set_direction(cmd["set_direction"])
-                    
+            await websocket.receive_text() # On écoute mais on fait rien
     except WebSocketDisconnect:
         manager.disconnect(websocket)
