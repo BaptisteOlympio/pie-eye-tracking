@@ -66,13 +66,13 @@ class ProcessFrame() :
                     print("frame size is null")
                     continue
                 
-                response = await stub.GetLandmark(openfaceservice_pb2.Frame(
+                response = await stub.GetLandmarkAndGaze(openfaceservice_pb2.Frame(
                     frame=data_b,
                     dtype=dtype_b,
                     shape=shape_b
                 ))
                 landmark = []
-                for point in response.landmark :
+                for point in response.landmark.landmark :
                     landmark.append((int(point.x), int(point.y)))
                     
                 # print(landmark[0])

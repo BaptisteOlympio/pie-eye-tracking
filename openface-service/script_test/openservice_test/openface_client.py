@@ -22,11 +22,11 @@ async def run() :
             shape=shape_b
         ))
         landmark = []
-        for point in response.landmark :
+        for point in response.landmark.landmark :
             landmark.append((int(point.x), int(point.y)))
         gaze_angle_x = response.gaze.gaze_angle_x
         gaze_angle_y = response.gaze.gaze_angle_y
-            
+        
         print(landmark[0], landmark[1])
         print("Gaze angle x:", gaze_angle_x)
         print("Gaze angle y:", gaze_angle_y)
