@@ -28,3 +28,5 @@ def get_ip_adress():
 
     print("IP Address :", ipadress)
     return ipadress
+
+print(get_ip_adress())
