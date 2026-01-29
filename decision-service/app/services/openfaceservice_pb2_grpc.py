@@ -2,8 +2,8 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 import warnings
-import sys
-import app.services.openfaceservice_pb2 as openfaceservice__pb2
+
+import openfaceservice_pb2 as openfaceservice__pb2
 
 GRPC_GENERATED_VERSION = '1.70.0'
 GRPC_VERSION = grpc.__version__
@@ -34,17 +34,17 @@ class OpenFaceServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetLandmark = channel.unary_unary(
-                '/OpenFaceService/GetLandmark',
+        self.GetLandmarkAndGaze = channel.unary_unary(
+                '/OpenFaceService/GetLandmarkAndGaze',
                 request_serializer=openfaceservice__pb2.Frame.SerializeToString,
-                response_deserializer=openfaceservice__pb2.Landmark.FromString,
+                response_deserializer=openfaceservice__pb2.LandmarkAndGaze.FromString,
                 _registered_method=True)
 
 
 class OpenFaceServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def GetLandmark(self, request, context):
+    def GetLandmarkAndGaze(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -53,10 +53,10 @@ class OpenFaceServiceServicer(object):
 
 def add_OpenFaceServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetLandmark': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetLandmark,
+            'GetLandmarkAndGaze': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetLandmarkAndGaze,
                     request_deserializer=openfaceservice__pb2.Frame.FromString,
-                    response_serializer=openfaceservice__pb2.Landmark.SerializeToString,
+                    response_serializer=openfaceservice__pb2.LandmarkAndGaze.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -70,7 +70,7 @@ class OpenFaceService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def GetLandmark(request,
+    def GetLandmarkAndGaze(request,
             target,
             options=(),
             channel_credentials=None,
@@ -83,9 +83,9 @@ class OpenFaceService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/OpenFaceService/GetLandmark',
+            '/OpenFaceService/GetLandmarkAndGaze',
             openfaceservice__pb2.Frame.SerializeToString,
-            openfaceservice__pb2.Landmark.FromString,
+            openfaceservice__pb2.LandmarkAndGaze.FromString,
             options,
             channel_credentials,
             insecure,
