@@ -2,117 +2,115 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Interface avec Descriptions</title>
+    <title>Domotique Design</title>
     <style>
-        /* --- STYLE GLOBAL --- */
-        body {
-            background-color: #121212;
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0; height: 100vh; width: 100vw; overflow: hidden;
-        }
+        /* --- GLOBAL --- */
+        body { background-color: #121212; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; height: 100%; width: 100%; }
+        .grid-cell { display: flex; justify-content: center; align-items: center; position: relative; }
 
-        /* --- LA GRILLE (3x3) --- */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr;
-            height: 100%; width: 100%;
-        }
-
-        .grid-cell {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* border: 1px solid rgba(255, 255, 255, 0.05);  Optionnel : voir les cases */
-        }
-
-        /* --- NOUVEAU : LE GROUPE (Bouton + Texte) --- */
-        .action-group {
-            display: flex;
-            flex-direction: column; /* Empile le texte et le bouton */
-            align-items: center;
-            gap: 15px; /* Espace entre le texte et le bouton */
-        }
-
-        /* --- NOUVEAU : LE LABEL (Texte descriptif) --- */
-        .action-label {
-            font-size: 1rem;
+        /* --- INFO PIÈCE (Haut-Gauche) --- */
+        #room-display {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4CAF50;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 5px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: #4CAF50; /* Vert pour bien ressortir */
+        }
+
+        /* --- INFO QUEUE (Haut-Droite) - ZOOM --- */
+        #queue-container {
+            width: 90%;
+            text-align: left;
+            font-size: 1.3rem; /* Beaucoup plus gros (avant 0.9) */
+            color: #888;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            line-height: 1.6;
+        }
+        .queue-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #444;
+            display: flex;
+            justify-content: space-between;
+        }
+        .queue-item.active {
             font-weight: bold;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            color: #4CAF50;
+            font-size: 1.5rem; /* L'élément actif est encore plus gros */
+        }
+        .queue-item span:last-child {
+            font-family: monospace;
+            color: #ddd;
+        }
+        /* Colorier le statut actif aussi */
+        .queue-item.active span:last-child {
+            color: #4CAF50; 
         }
 
-        /* --- LES CAMEMBERTS --- */
+        /* --- BOUTONS --- */
         .segment {
-            width: 200px;  /* Un peu réduit pour laisser place au texte */
-            height: 200px;
-            border-radius: 50%;
+            width: 220px; height: 220px; border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            font-weight: bold; font-size: 1.2rem; color: #666;
-            background-color: #2a2a2a; 
-            border: 6px solid #444;
-            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold; font-size: 1.2rem; text-align: center; 
+            line-height: 1.2; color: #ddd; text-transform: uppercase; white-space: pre-wrap;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            background-color: #2a2a2a; border: 6px solid #444;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transition: transform 0.2s, background-color 0.3s;
         }
 
-        #CENTER { width: 160px; height: 160px; border-color: #666; font-size: 1rem; color: #888; }
-
-        /* --- VALIDATION --- */
-        .validated {
-            background-color: #4CAF50 !important;
-            box-shadow: 0 0 50px #4CAF50 !important;
-            border-color: #fff; color: #fff;
-            transform: scale(1.1); z-index: 20;
+        /* --- THEMES POUR LE CERCLE CENTRAL --- */
+        /* Défaut */
+        #CENTER.neutral {
+            background-color: #2a2a2a;
+            color: #aaa;
+            border-color: #666;
+        }
+        
+        /* LUMIÈRE ALLUMÉE : Jaune Pâle + Texte Noir (Lisible) */
+        #CENTER.light-on {
+            background-color: #FFEB3B !important; 
+            color: #000 !important;
+            border-color: #FBC02D !important;
+            box-shadow: 0 0 40px rgba(255, 235, 59, 0.4);
+            text-shadow: none; /* Pas d'ombre sur texte noir */
         }
 
-        /* --- DEBUG --- */
+        /* LUMIÈRE ÉTEINTE : Très Sombre */
+        #CENTER.light-off {
+            background-color: #0f0f0f !important;
+            color: #555 !important;
+            border-color: #333 !important;
+        }
+
+        #CENTER { width: 180px; height: 180px; z-index: 10; }
+        .disabled { opacity: 0.2; border-color: #222; }
+        .validated { background-color: #4CAF50 !important; box-shadow: 0 0 50px #4CAF50 !important; border-color: #fff !important; color: #fff !important; transform: scale(1.1); z-index: 20; }
         .debug-area { align-items: flex-end !important; justify-content: flex-start !important; padding: 20px; }
-        .debug-text { font-family: monospace; color: #4CAF50; opacity: 0.7; }
+        .debug-text { font-family: monospace; color: #4CAF50; opacity: 0.5; font-size: 0.8rem;}
     </style>
 </head>
 <body>
 
     <div class="main-grid">
-        
-        <div class="grid-cell"></div>
-        
+        <div class="grid-cell"><div id="room-display">MAISON</div></div>
+        <div class="grid-cell"><div id="UP" class="segment">--</div></div>
         <div class="grid-cell">
-            <div class="action-group">
-                <span class="action-label">Monter le Volume</span> <div id="UP" class="segment">HAUT</div>
+            <div id="queue-container">
+                <div style="font-style:italic; font-size: 1rem;">Menu Principal</div>
             </div>
         </div>
-        
-        <div class="grid-cell"></div>
 
-        <div class="grid-cell">
-            <div class="action-group">
-                <div id="LEFT" class="segment">GAUCHE</div>
-                <span class="action-label">Précédent</span> </div>
-        </div>
+        <div class="grid-cell"><div id="LEFT" class="segment">--</div></div>
+        <div class="grid-cell"><div id="CENTER" class="segment neutral">--</div></div>
+        <div class="grid-cell"><div id="RIGHT" class="segment">--</div></div>
 
-        <div class="grid-cell">
-            <div id="CENTER" class="segment">Attente</div>
-        </div>
-
-        <div class="grid-cell">
-            <div class="action-group">
-                <div id="RIGHT" class="segment">DROITE</div>
-                <span class="action-label">Suivant</span> </div>
-        </div>
-
-        <div class="grid-cell debug-area">
-            <div id="debug-text" class="debug-text">Init...</div>
-        </div>
-
-        <div class="grid-cell">
-            <div class="action-group">
-                <div id="DOWN" class="segment">BAS</div>
-                <span class="action-label">Baisser le Volume</span> </div>
-        </div>
-
+        <div class="grid-cell debug-area"><div id="debug-text" class="debug-text">...</div></div>
+        <div class="grid-cell"><div id="DOWN" class="segment">--</div></div>
         <div class="grid-cell"></div>
     </div>
 
@@ -122,37 +120,74 @@
 
         ws.onmessage = function(event) {
             var data = JSON.parse(event.data);
+            var labels = data.labels;
+
+            // 1. INFO PIÈCE
+            document.getElementById("room-display").innerText = data.room_name;
+
+            // 2. INFO QUEUE (LISTE) - GROS FORMAT
+            var queueContainer = document.getElementById("queue-container");
+            if (data.queue && data.queue.length > 0) {
+                var htmlContent = "";
+                data.queue.forEach(item => {
+                    var activeClass = item.active ? "active" : "";
+                    var marker = item.active ? "➤ " : ""; 
+                    htmlContent += `
+                        <div class="queue-item ${activeClass}">
+                            <span>${marker}${item.name}</span>
+                            <span>${item.state}</span>
+                        </div>`;
+                });
+                queueContainer.innerHTML = htmlContent;
+            } else {
+                queueContainer.innerHTML = "<div style='opacity:0.5; font-size: 1rem'>Menu Principal<br>Sélectionnez une pièce</div>";
+            }
+
+            // 3. THÈME CENTRAL (Couleur Lumière)
+            var centerEl = document.getElementById("CENTER");
+            // On nettoie les anciennes classes
+            centerEl.classList.remove("neutral", "light-on", "light-off");
+            // On ajoute la nouvelle classe envoyée par Python
+            if (data.center_theme) centerEl.classList.add(data.center_theme);
+
+            // 4. TEXTES BOUTONS
+            ["UP", "DOWN", "LEFT", "RIGHT", "CENTER"].forEach(id => {
+                var el = document.getElementById(id);
+                if(el) {
+                    if (labels[id] !== undefined) el.innerText = labels[id];
+                    if (labels[id] === "") el.classList.add("disabled");
+                    else el.classList.remove("disabled");
+                }
+            });
+
+            // 5. ANIMATION ROUE
             var dir = data.direction;
             var percent = data.percent;
             var isValid = data.validated;
-
-            document.getElementById("debug-text").innerHTML = "INPUT: " + (data.debug_info || dir);
-
-            var allSegments = ["UP", "DOWN", "LEFT", "RIGHT", "CENTER"];
             
-            allSegments.forEach(function(segmentId) {
+            document.getElementById("debug-text").innerText = "SIMU: " + (data.debug_info || "Wait");
+
+            ["UP", "DOWN", "LEFT", "RIGHT", "CENTER"].forEach(segmentId => {
                 var el = document.getElementById(segmentId);
-                if (!el) return;
+                if (!el || el.innerText === "") return;
 
                 if (segmentId === dir && dir !== "CENTER") {
                     if (isValid) {
                         el.classList.add('validated');
                         el.style.background = "#4CAF50";
-                        el.innerText = "OK";
                     } else {
                         el.classList.remove('validated');
                         el.style.background = `conic-gradient(#4CAF50 ${percent}%, #2a2a2a ${percent}%)`;
-                        el.innerText = Math.floor(percent) + "%";
                         el.style.color = "white";
                     }
                 } else {
                     el.classList.remove('validated');
-                    el.style.background = "#2a2a2a";
+                    // Attention : On ne reset pas le background du CENTRE ici, car il est géré par les classes CSS (light-on/off)
                     if (segmentId !== "CENTER") {
-                        el.innerText = segmentId; 
-                        el.style.color = "#666";
+                        el.style.background = "#2a2a2a";
+                        el.style.color = "#ddd";
                     } else {
-                        el.innerText = "Attente";
+                        // Le centre garde sa couleur de classe, on reset juste l'échelle si besoin
                     }
                 }
             });
