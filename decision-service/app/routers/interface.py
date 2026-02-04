@@ -3,7 +3,9 @@ from fastapi.responses import HTMLResponse
 from app.services import gaze
 from app.services import perf 
 from app.services import process_frame
+from app.services import IHM
 from app.core import state
+
 
 interface_router = APIRouter()
 
@@ -37,3 +39,8 @@ async def get_perf(background_tasks : BackgroundTasks) :
     with open("app/templates/perf/index.html") as file : 
         return HTMLResponse(content=file.read())
 
+@interface_router.get("/interface/IHM")
+async def get_IHM(background_tasks : BackgroundTasks) :
+    background_tasks.add_task(IHM.IHM_task)
+    with open("app/templates/IHM/index.html") as file : 
+        return HTMLResponse(content=file.read())

@@ -4,6 +4,20 @@ console.log("Frontend loaded.");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+
+async function send_ip() {
+  const ip = document.getElementById("ip").value;
+  const port = document.getElementById("port").value;
+
+  const response = await fetch("/connect_video_service", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ip: ip, port: port})
+  });
+  const data = await response.json()
+  document.getElementById("response").innerText = data.status;
+}
+
 // Connect to WebSocket and auto-reconnect on close
 function connectWS() {
     const ws = new WebSocket(`ws://${location.host}/ws?type=visualisation`);

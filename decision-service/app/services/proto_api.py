@@ -15,7 +15,7 @@ sys.path.insert(0, str(decision_service_path))
 # 2. FakeListDriver : Les "Yeux Virtuels" qui lisent le scénario de test.
 # 3. smart_home : La "Mémoire de la Maison" qui stocke l'état réel (Lumière ON/OFF, etc.).
 from logic_wheel import DecisionWheel
-from fake_decision import FakeListDriver
+# from fake_decision import FakeListDriver
 from smart_home import home_system
 
 from app.services import process_frame

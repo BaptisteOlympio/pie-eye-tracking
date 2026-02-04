@@ -93,7 +93,7 @@ async def get_direction_from_gaze(gaze) :
     
     threshold = 0.1  # Définir un seuil pour éviter les petites variations
 
-    if abs(gaze_x) < threshold and abs(gaze_y) < threshold :
+    if abs(gaze_x) < threshold and 0 < gaze_y< 0.2 :
         return "CENTER"
     
     if abs(gaze_x) >= abs(gaze_y) :
@@ -102,7 +102,7 @@ async def get_direction_from_gaze(gaze) :
         else :
             return "LEFT"
     else :
-        if gaze_y > 0 :
+        if gaze_y > 0.1 :
             return "DOWN"
         else :
             return "UP"

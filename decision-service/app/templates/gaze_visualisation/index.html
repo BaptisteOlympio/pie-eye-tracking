@@ -6,6 +6,14 @@
 </head>
 <body>
     <h1>Realtime Dot Visualization</h1>
+
+    <div id="ip_port_box">
+        <input type="text" id="ip" placeholder="adresse ip video service...">
+        <input type="text" id="port" placeholder="port video service...">
+        <button onclick="send_ip()">Send IP</button>
+        <div id="response"></div>
+    </div>
+
     <div id="gazex">x</div>
     <div id="gazey">y</div>
 
