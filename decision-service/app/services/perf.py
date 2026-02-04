@@ -71,6 +71,13 @@ async def stream_video() :
                     "gaze_y": float(gaze[1])
                 }
                 await manager.broadcast(gaze_data, "gaze")
+
+            # Sending direcion data
+            direction = await get_direction_from_gaze(gaze)
+            direction_data = {
+                "direction": direction
+            }
+            await manager.broadcast(direction_data, "direction")
             
             # TODO ici pas mettre de sleep mais plutôt mettre une condition pour savoir si la valeur à changé. 
             await asyncio.sleep(1/30)
@@ -79,3 +86,23 @@ async def stream_video() :
             # print(e)
             await asyncio.sleep(1)
             continue
+
+async def get_direction_from_gaze(gaze) :
+    gaze_x = gaze[0]
+    gaze_y = gaze[1]
+    
+    threshold = 0.1  # Définir un seuil pour éviter les petites variations
+
+    if abs(gaze_x) < threshold and abs(gaze_y) < threshold :
+        return "CENTER"
+    
+    if abs(gaze_x) >= abs(gaze_y) :
+        if gaze_x > 0 :
+            return "RIGHT"
+        else :
+            return "LEFT"
+    else :
+        if gaze_y > 0 :
+            return "DOWN"
+        else :
+            return "UP"

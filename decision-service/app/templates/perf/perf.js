@@ -33,3 +33,16 @@ wsGaze.onmessage = (event) => {
 wsGaze.onerror = (error) => {
   console.error("Erreur WebSocket gaze:", error);
 };
+
+
+// WebSocket pour recevoir les données de direction
+const wsDirection = new WebSocket(`ws://${location.host}/ws?type=direction`);
+
+wsDirection.onmessage = (event) => {
+  const directionData = JSON.parse(event.data);
+  document.getElementById("direction-text").innerText = directionData.direction;
+};
+
+wsDirection.onerror = (error) => {
+  console.error("Erreur WebSocket direction:", error);
+};
