@@ -24,7 +24,6 @@ def get_ip_adress():
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
         ipadress = result.stdout[:-1]
     else :
-        ipadress = "Unknown OS" 
+        ipadress = "*" 
 
-    print("IP Address :", ipadress)
     return ipadress

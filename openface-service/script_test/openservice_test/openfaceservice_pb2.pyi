@@ -28,3 +28,19 @@ class Landmark(_message.Message):
     LANDMARK_FIELD_NUMBER: _ClassVar[int]
     landmark: _containers.RepeatedCompositeFieldContainer[LandmarkTuple]
     def __init__(self, landmark: _Optional[_Iterable[_Union[LandmarkTuple, _Mapping]]] = ...) -> None: ...
+
+class Gaze(_message.Message):
+    __slots__ = ("gaze_angle_x", "gaze_angle_y")
+    GAZE_ANGLE_X_FIELD_NUMBER: _ClassVar[int]
+    GAZE_ANGLE_Y_FIELD_NUMBER: _ClassVar[int]
+    gaze_angle_x: float
+    gaze_angle_y: float
+    def __init__(self, gaze_angle_x: _Optional[float] = ..., gaze_angle_y: _Optional[float] = ...) -> None: ...
+
+class LandmarkAndGaze(_message.Message):
+    __slots__ = ("landmark", "gaze")
+    LANDMARK_FIELD_NUMBER: _ClassVar[int]
+    GAZE_FIELD_NUMBER: _ClassVar[int]
+    landmark: Landmark
+    gaze: Gaze
+    def __init__(self, landmark: _Optional[_Union[Landmark, _Mapping]] = ..., gaze: _Optional[_Union[Gaze, _Mapping]] = ...) -> None: ...

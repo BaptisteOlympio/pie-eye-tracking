@@ -1,0 +1,26 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+#video {
+    display: block;
+    margin: 20px auto;
+    border: 2px solid #333;
+    border-radius: 5px;
+}
+
+#ip_port_box {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#gaze-data {
+    max-width: 640px;
+    width: 100%;
+}
