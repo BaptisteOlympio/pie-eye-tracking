@@ -15,6 +15,7 @@ class ProcessFrame() :
     def __init__(self):
         self.latest_frame = np.empty(shape=0)
         self.latest_landmark = []
+        self.latest_gaze = []
         self.context = zmq.asyncio.Context()
     
     def initializeConnection(self, ip_vs, port_vs) -> bool :
@@ -74,12 +75,14 @@ class ProcessFrame() :
                 landmark = []
                 for point in response.landmark.landmark :
                     landmark.append((int(point.x), int(point.y)))
-                    
+                
+                gaze_angle_x = response.gaze.gaze_angle_x
+                gaze_angle_y = response.gaze.gaze_angle_y
                 # print(landmark[0])
                 
                 self.latest_frame = frame
                 self.latest_landmark = landmark
-                
+                self.latest_gaze = [gaze_angle_x, gaze_angle_y]
             print("loop finished")
             
 process_frame = ProcessFrame()

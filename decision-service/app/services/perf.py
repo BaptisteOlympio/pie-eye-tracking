@@ -26,6 +26,7 @@ async def stream_video() :
     while True :
         frame = process_frame.process_frame.latest_frame
         landmark = process_frame.process_frame.latest_landmark
+        gaze = process_frame.process_frame.latest_gaze
         # latest_update = process_frame.process_frame.latest_update
         
         # if latest_update == previous_update : 
@@ -35,17 +36,43 @@ async def stream_video() :
         
         try : 
             frame_landmark = frame.copy()
+            # Dessiner les landmarks en rouge
             for face_keypoint in landmark : 
                 frame_landmark = cv2.circle(frame_landmark, 
                                             face_keypoint, 
                                             radius=3, 
                                             color=(0,0,255), 
                                             thickness=-1)
+            # Dessiner le point de gaze
+            if gaze and len(gaze) >= 2:
+                height, width = frame_landmark.shape[:2]
+                gaze_x = float(gaze[0])*2
+                gaze_y = float(gaze[1])*2
+                # gaze_x = max(-1.0, min(1.0, gaze_x))
+                # gaze_y = max(-1.0, min(1.0, gaze_y))
+                px = int((gaze_x + 1) * 0.5 * (width - 1))
+                py = int((gaze_y + 1) * 0.5 * (height - 1))
+                frame_landmark = cv2.circle(frame_landmark,
+                                            (px, py),
+                                            radius=6,
+                                            color=(0, 255, 0),
+                                            thickness=-1)
             _, jpeg = cv2.imencode(".jpg", 
                                    frame_landmark, 
                                    [cv2.IMWRITE_JPEG_QUALITY, 80])
             # print("ok")
             await manager.broadcast(jpeg.tobytes(), "video")
+            
+            # ------------------------------------------------------------------------
+            # Envoyer les données de gaze
+            if gaze and len(gaze) >= 2:
+                gaze_data = {
+                    "gaze_x": float(gaze[0]),
+                    "gaze_y": float(gaze[1])
+                }
+                await manager.broadcast(gaze_data, "gaze")
+            # ------------------------------------------------------------------------
+            
             # TODO ici pas mettre de sleep mais plutôt mettre une condition pour savoir si la valeur à changé. 
             await asyncio.sleep(1/30)
             

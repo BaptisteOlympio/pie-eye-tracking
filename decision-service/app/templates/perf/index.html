@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Video Stream</title>
+  <link rel="stylesheet" href="/templates/perf/style.css">
 </head>
 <body>
   <h1>Perf</h1>
@@ -35,6 +36,12 @@
 
   <img id="video" width="640" />
 
+  <div id="gaze-data" style="margin-top: 20px; padding: 15px; background-color: #f0f0f0; border-radius: 5px;">
+    <h2>Données de Gaze</h2>
+    <p><strong>Gaze X:</strong> <span id="gaze-x">N/A</span></p>
+    <p><strong>Gaze Y:</strong> <span id="gaze-y">N/A</span></p>
+  </div>
+
   <script>
     const ws = new WebSocket(`ws://${location.host}/ws?type=video`);
     ws.binaryType = "arraybuffer";
@@ -44,6 +51,19 @@
       const url = URL.createObjectURL(blob);
       const img = document.getElementById("video");
       img.src = url;
+    };
+    
+    // WebSocket pour recevoir les données de gaze
+    const wsGaze = new WebSocket(`ws://${location.host}/ws?type=gaze`);
+    
+    wsGaze.onmessage = (event) => {
+      const gazeData = JSON.parse(event.data);
+      document.getElementById("gaze-x").innerText = gazeData.gaze_x.toFixed(4);
+      document.getElementById("gaze-y").innerText = gazeData.gaze_y.toFixed(4);
+    };
+    
+    wsGaze.onerror = (error) => {
+      console.error("Erreur WebSocket gaze:", error);
     };
   </script>
 </body>
