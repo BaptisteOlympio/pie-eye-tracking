@@ -46,8 +46,8 @@ async def stream_video() :
             # Dessiner le point de gaze
             if gaze and len(gaze) >= 2:
                 height, width = frame_landmark.shape[:2]
-                gaze_x = float(gaze[0])*2
-                gaze_y = float(gaze[1])*2
+                gaze_x = float(gaze[0])
+                gaze_y = float(gaze[1])
                 # gaze_x = max(-1.0, min(1.0, gaze_x))
                 # gaze_y = max(-1.0, min(1.0, gaze_y))
                 px = int((gaze_x + 1) * 0.5 * (width - 1))
@@ -60,18 +60,17 @@ async def stream_video() :
             _, jpeg = cv2.imencode(".jpg", 
                                    frame_landmark, 
                                    [cv2.IMWRITE_JPEG_QUALITY, 80])
-            # print("ok")
             await manager.broadcast(jpeg.tobytes(), "video")
             
-            # ------------------------------------------------------------------------
-            # Envoyer les données de gaze
+            
+            # Sending gaze data
             if gaze and len(gaze) >= 2:
+                # json format to be able to send them via websocket
                 gaze_data = {
                     "gaze_x": float(gaze[0]),
                     "gaze_y": float(gaze[1])
                 }
                 await manager.broadcast(gaze_data, "gaze")
-            # ------------------------------------------------------------------------
             
             # TODO ici pas mettre de sleep mais plutôt mettre une condition pour savoir si la valeur à changé. 
             await asyncio.sleep(1/30)
