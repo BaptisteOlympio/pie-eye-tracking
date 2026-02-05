@@ -2,59 +2,19 @@
 // var ws = new WebSocket(ws_protocol + window.location.host + "/ws");
 const ws = new WebSocket(`ws://${location.host}/ws?type=IHM`);
 
-// Fonction de debug pour analyser les données reçues
-function debugData(data) {
-  console.log("=== DEBUG IHM ===");
-  console.log("📦 Données brutes:", data);
-  console.log("🏠 room_name:", data.room_name, typeof data.room_name);
-  console.log("🎯 direction:", data.direction, typeof data.direction);
-  console.log("📊 percent:", data.percent, typeof data.percent);
-  console.log("✅ validated:", data.validated, typeof data.validated);
-  console.log("🏷️ labels:", data.labels);
-  console.log("📋 queue:", data.queue);
-  console.log("🎨 center_theme:", data.center_theme);
-  console.log("🔍 debug_info:", data.debug_info);
-  
-  // Vérification des champs manquants
-  const required = ['direction', 'percent', 'validated', 'labels', 'room_name', 'queue', 'center_theme'];
-  required.forEach(field => {
-    if (data[field] === undefined) {
-      console.warn(`⚠️ Champ manquant: ${field}`);
-    }
-  });
-  
-  // Vérification des labels
-  if (data.labels) {
-    ["UP", "DOWN", "LEFT", "RIGHT", "CENTER"].forEach(dir => {
-      console.log(`  Label ${dir}:`, data.labels[dir], 
-                  data.labels[dir] === undefined ? "❌ UNDEFINED" : "✅");
-    });
-  } else {
-    console.error("❌ data.labels est undefined!");
-  }
-  
-  console.log("=================");
-}
+
 
 ws.onmessage = function (event) {
   try {
-    console.log("🔵 AVANT parse - type:", typeof event.data);
-    
     var data = JSON.parse(event.data);
-    console.log("🟡 APRÈS 1er parse - type:", typeof data);
     
     // Si c'est toujours un string, il faut parser une 2ème fois
     if (typeof data === 'string') {
       console.log("⚠️ Double encodage détecté, 2ème parse...");
       data = JSON.parse(data);
     }
-    
-    console.log("🟢 APRÈS parse final - type:", typeof data);
-    console.log("🟢 data.labels:", data.labels);
-    
-    // Appel de la fonction de debug
-    debugData(data);
-    
+
+   
     // Protection contre labels undefined
     var labels = data.labels || {"UP": "", "DOWN": "", "LEFT": "", "RIGHT": "", "CENTER": ""};
     
@@ -63,7 +23,7 @@ ws.onmessage = function (event) {
     }
 
     // 1. INFO PIÈCE
-    document.getElementById("room-display").innerText = data.room_name || "N/A";
+    document.getElementById("room-display").innerText = data.room_name || "Pièce Inconnue";
 
     // 2. INFO QUEUE (LISTE) - GROS FORMAT
     var queueContainer = document.getElementById("queue-container");

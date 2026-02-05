@@ -13,10 +13,10 @@ sys.path.insert(0, str(decision_service_path))
 # ### Importation DES MODULES ###
 # 1. DecisionWheel : ce qui gère l'état des roues incrémentales et donc la gestion de l'état des devices
 # 2. FakeListDriver : Les "Yeux Virtuels" qui lisent le scénario de test.
-# 3. smart_home : La "Mémoire de la Maison" qui stocke l'état réel (Lumière ON/OFF, etc.).
+# 3. SmartHomeSystem : La "Mémoire de la Maison" qui stocke l'état réel (Lumière ON/OFF, etc.).
 from logic_wheel import DecisionWheel
 from fake_decision import FakeListDriver
-from smart_home import home_system
+from smart_home import SmartHomeSystem
 
 from app.services import process_frame
 
@@ -35,6 +35,7 @@ class InterfaceManager:
         self.mode = "MENU_PRINCIPAL" 
         self.current_room = None        # Aucune pièce sélectionnée au début
         self.selected_device_index = 0  # Si on entre dans une pièce, on commence par le 1er objet
+        self.home_system = SmartHomeSystem()  # Instance privée de la Smart Home
         
     # ### FONCTION VITALE : PRÉPARATION DE L'AFFICHAGE ###
     # Cette fonction est appelée à CHAQUE image (4 fois par seconde).
@@ -61,7 +62,7 @@ class InterfaceManager:
         # Ici, on contrôle les objets (Lumière, Volets, etc.)
         elif self.mode == "ROOM_CONTROL":
             room_name = self.current_room
-            # On demande à la "Smart Home" la liste des objets de cette pièce
+            # On demanself.de à la "Smart Home" la liste des objets de cette pièce
             devices = home_system.get_room_devices(self.current_room)
             
             # 1. Construction de la "File d'attente" (Liste à droite de l'écran)
@@ -145,7 +146,7 @@ class InterfaceManager:
 
         # Si on valide dans une PIÈCE -> On agit sur la maison
         elif self.mode == "ROOM_CONTROL":
-            devices = home_system.get_room_devices(self.current_room)
+            devices = self.home_system.get_room_devices(self.current_room)
             
             # Navigation (Droite/Gauche) : On change l'index de sélection
             if direction == "RIGHT":
@@ -154,7 +155,7 @@ class InterfaceManager:
                 self.selected_device_index = (self.selected_device_index - 1) % len(devices)
             # Action (Haut/Bas) : On appelle la SmartHome pour modifier l'objet
             elif direction in ["UP", "DOWN"]:
-                home_system.update_device(self.current_room, self.selected_device_index, direction)
+                self.home_system.update_device(self.current_room, self.selected_device_index, direction)
 
 # On crée une instance unique du gestionnaire pour toute l'app
 ui_manager = InterfaceManager()

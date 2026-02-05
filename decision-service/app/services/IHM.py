@@ -6,8 +6,7 @@ import cv2
 import json
 from app.services.connection_manager import manager 
 from app.services import process_frame
-from app.services.logic_wheel import DecisionWheel
-from app.services.proto_api import InterfaceManager
+from app.services.logic_wheel import DecisionWheel, InterfaceManager
 from app.services.perf import get_direction_from_gaze
 from app.core import state
 
@@ -44,12 +43,10 @@ async def run_app_logic():
             gaze = process_frame.process_frame.latest_gaze
             
             # --- ÉTAPE A : INPUT ---
-            # On demande aux yeux : "Où regarde l'utilisateur ?" (ex: "UP")
+            # la direction du regard (UP, DOWN, LEFT, RIGHT, CENTER) calculée à partir des coordonnées de gaze
             current_direction = await get_direction_from_gaze(gaze)  
 
-            # --- ÉTAPE B : FILTRAGE & LOGIQUE ---
-            # On demande à la roue : "Est-ce une validation ou juste un coup d'œil ?"
-            # La roue gère le buffer et le % de progression.
+            # Mise à jour de la roue de décision avec la nouvelle direction
             wheel_result = wheel.update(current_direction)
             
             # --- ÉTAPE C : CONTEXTE VISUEL (AVANT ACTION) ---
@@ -84,8 +81,6 @@ async def run_app_logic():
             }
             
             # On envoie via WebSocket à la page web
-            print(f"Envoi IHM: {data_to_send}\n")
-            print(json.dumps(data_to_send))
             await manager.broadcast(json.dumps(data_to_send), "IHM")
             
             # --- ÉTAPE F : ATTENTE ---
