@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Video Stream</title>
+  <link rel="stylesheet" href="/templates/perf/style.css">
 </head>
+
 <body>
   <h1>Perf</h1>
 
@@ -12,39 +15,19 @@
     <button onclick="send_ip()">Send IP</button>
     <div id="response"></div>
   </div>
-  
-  
-  
-
-  <script>
-    async function send_ip() {
-      const ip = document.getElementById("ip").value;
-      const port = document.getElementById("port").value;
-
-      const response = await fetch("/connect_video_service", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ip: ip, port: port})
-      });
-      const data = await response.json()
-      document.getElementById("response").innerText = data.status;
-    }
-  </script>
-
-  
 
   <img id="video" width="640" />
 
-  <script>
-    const ws = new WebSocket(`ws://${location.host}/ws?type=video`);
-    ws.binaryType = "arraybuffer";
+  <div id="direction" style="margin-top: 20px; padding: 15px; background-color: #e8f4f8; border-radius: 5px; font-size: 18px; font-weight: bold;">
+    <p>Direction: <span id="direction-text">N/A</span></p>
+  </div>
 
-    ws.onmessage = (event) => {
-      const blob = new Blob([event.data], { type: "image/jpeg" });
-      const url = URL.createObjectURL(blob);
-      const img = document.getElementById("video");
-      img.src = url;
-    };
-  </script>
+  <div id="gaze-data" style="margin-top: 20px; padding: 15px; background-color: #f0f0f0; border-radius: 5px;">
+    <h2>Données de Gaze</h2>
+    <p><strong>Gaze X:</strong> <span id="gaze-x">N/A</span></p>
+    <p><strong>Gaze Y:</strong> <span id="gaze-y">N/A</span></p>
+  </div>
+
+  <script src="/templates/perf/perf.js"></script>
 </body>
 </html>

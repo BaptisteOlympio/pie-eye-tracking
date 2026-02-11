@@ -1,8 +1,9 @@
 syntax = "proto3";
 
 service OpenFaceService {
-    rpc GetLandmark (Frame) returns (Landmark) {}
+    rpc GetLandmarkAndGaze (Frame) returns (LandmarkAndGaze) {}
 }
+
 
 message Frame {
     bytes frame = 1;
@@ -18,3 +19,14 @@ message LandmarkTuple {
 message Landmark {
     repeated LandmarkTuple landmark = 1;
 }
+
+message Gaze {
+    float gaze_angle_x = 1;
+    float gaze_angle_y = 2;
+}
+
+message LandmarkAndGaze{
+    Landmark landmark = 1;
+    Gaze gaze = 2;
+}
+
