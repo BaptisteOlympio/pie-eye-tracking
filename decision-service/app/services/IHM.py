@@ -69,8 +69,7 @@ async def run_app_logic():
                 ui_manager.process_validation(wheel_result["validated"])
                 
                 # On remet la roue à zéro pour éviter de re-cliquer tout de suite
-                wheel.compteur = 0 
-                wheel.direction_en_cours = "CENTER"
+                wheel.reset()
 
             # --- ÉTAPE E : ENVOI AU HTML ---
             # On regroupe tout (Input + Roue + Contexte UI) dans un gros paquet JSON
