@@ -139,9 +139,6 @@ class SmartHomeSystem:
         
         return device["state"]
 
-# Instance unique
-# home_system = SmartHomeSystem()
-
 class InterfaceManager:
     def __init__(self):
         # ### ÉTAT INITIAL ###
