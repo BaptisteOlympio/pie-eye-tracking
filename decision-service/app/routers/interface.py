@@ -14,6 +14,7 @@ async def get_home() :
     with open("app/templates/home/index.html") as file : 
         return HTMLResponse(content=file.read())
 
+# TODO a enlever
 @interface_router.get("/interface/gaze_visualisation")
 async def get_gaze_visualisation(background_tasks : BackgroundTasks) :
     background_tasks.add_task(gaze.gaze_visualisation)
