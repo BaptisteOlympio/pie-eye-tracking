@@ -10,21 +10,21 @@
     },
     "CUISINE": {
         "devices": [
-            {"id": "light_main", "name": "Lumière Plafond", "type": "binary", "state": false},
-            {"id": "shutters", "name": "Volets", "type": "analog", "state": 0},
-            {"id": "speaker", "name": "Enceinte", "type": "analog", "state": 30},
-            {"id": "back_menu", "name": "MENU", "type": "navigation", "state": false, "state_str": ""}
+            {"id": "light_main", "name": "Lumière Plafond", "type": "binary", "state": false, "state_str": ""},
+            {"id": "shutters", "name": "Volets", "type": "analog", "state": 0, "state_str": "Ouvert à"},
+            {"id": "speaker", "name": "Gaz", "type": "binary", "state": true, "state_str": "Allumé"},
+            {"id": "back_menu", "name": "MENU", "type": "navigation", "state": false, "state_str": "RETOUR"}
         ]
     },
     "CHAMBRE": {
         "devices": [
-            {"id": "back_menu", "name": "MENU", "type": "navigation", "state": false, "state_str": ""},
-            {"id": "shutters", "name": "Volets", "type": "analog", "state": 0}
+            {"id": "shutters", "name": "Volets", "type": "analog", "state": 0, "state_str": "Ouvert à"},
+            {"id": "back_menu", "name": "MENU", "type": "navigation", "state": false, "state_str": "RETOUR"}
         ]
     },
     "SDB": {
         "devices": [
-            {"id": "back_menu", "name": "MENU", "type": "navigation", "state": false, "state_str": ""}
+            {"id": "back_menu", "name": "MENU", "type": "navigation", "state": false, "state_str": "RETOUR"}
         ]
     }
 }

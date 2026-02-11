@@ -4,11 +4,26 @@ import asyncio
 import numpy as np
 import cv2
 import json
+import os
 from app.services.connection_manager import manager 
 from app.services import process_frame
 from app.services.logic_wheel import DecisionWheel, InterfaceManager
 from app.services.perf import get_direction_from_gaze
+from app.services.interpretation import get_direction_from_gaze
 from app.core import state
+
+# Chargement de la configuration de l'application
+config_path = os.path.join(os.path.dirname(__file__), "..", "config", "app_config.json")
+if os.path.exists(config_path):
+    with open(config_path, "r") as f:
+        app_config = json.load(f)
+else:
+    print("ERREUR: Fichier app_config.json introuvable, utilisation configuration par défaut")
+    app_config = {
+        "wheel": {"seuil_validation": 4, "buffer_limit": 2},
+        "performance": {"frequence_lecture": 5.0},
+        "gaze": {"threshold_horizontal": 0.15, "threshold_vertical": 0.15}
+    }
 
 async def IHM_task() :
     print("------------LAUCH STREAM TASK--------------")
@@ -26,7 +41,6 @@ async def IHM_task() :
 
 
 ui_manager = InterfaceManager()
-FREQUENCE_LECTURE = 1.0 # Vitesse de la boucle (Hz)
 
 async def run_app_logic():
     """
@@ -36,11 +50,17 @@ async def run_app_logic():
         - Get UI context
         - Send everything to the frontend via WebSocket
     """
+    # Chargement des paramètres depuis la config
+    FREQUENCE_LECTURE = app_config["performance"]["frequence_lecture"]
+    seuil_validation = app_config["wheel"]["seuil_validation"]
+    buffer_limit = app_config["wheel"]["buffer_limit"]
+    
     print(f">>> Démarrage Domotique V5 (Design) - {FREQUENCE_LECTURE} Hz")
+    print(f">>> Seuil validation: {seuil_validation}, Buffer: {buffer_limit}")
     
     # 1. Initialisation des composants
     # driver = FakeListDriver() # Les Yeux (Simulation)
-    wheel = DecisionWheel(seuil_validation=4, buffer_limit=2) # Le Filtre (Ergonomie)
+    wheel = DecisionWheel(seuil_validation=seuil_validation, buffer_limit=buffer_limit) # Le Filtre (Ergonomie)
     sleep_time = 1.0 / FREQUENCE_LECTURE
     
     try:
@@ -49,8 +69,7 @@ async def run_app_logic():
             landmark = process_frame.process_frame.latest_landmark
             gaze = process_frame.process_frame.latest_gaze
             
-            # --- ÉTAPE A : INPUT ---
-            # la direction du regard (UP, DOWN, LEFT, RIGHT, CENTER) calculée à partir des coordonnées de gaze
+            # La direction du regard (UP, DOWN, LEFT, RIGHT, CENTER) calculée à partir des coordonnées de gaze
             current_direction = await get_direction_from_gaze(gaze)  
 
             # Mise à jour de la roue de décision avec la nouvelle direction
