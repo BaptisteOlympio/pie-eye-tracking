@@ -29,6 +29,13 @@ ui_manager = InterfaceManager()
 FREQUENCE_LECTURE = 1.0 # Vitesse de la boucle (Hz)
 
 async def run_app_logic():
+    """
+    function that runs the main logic of the application:
+        - Read gaze data
+        - Update decision wheel
+        - Get UI context
+        - Send everything to the frontend via WebSocket
+    """
     print(f">>> Démarrage Domotique V5 (Design) - {FREQUENCE_LECTURE} Hz")
     
     # 1. Initialisation des composants
