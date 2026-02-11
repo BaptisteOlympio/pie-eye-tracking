@@ -1,12 +1,18 @@
+import os 
+import json
 
 async def get_direction_from_gaze(gaze) :
     # Plages réelles observées
-    # X: -0.2 (gauche, vers -1) à -0.16 (droite, vers +1)
-    # Y: -0.1 (haut, vers -1) à 0.03 (bas, vers +1)
-    gaze_min_x = -0.13  # Gauche
-    gaze_max_x = 0.18  # Droite
-    gaze_min_y = 0.02  # Haut
-    gaze_max_y = 0.23   # Bas
+
+    #lecture des données de calibrationdata.json
+    calibration_config_path = os.path.join(os.path.dirname(__file__), "..", "config", "calibration_data.json")
+    if os.path.exists(calibration_config_path):
+        with open(calibration_config_path, "r") as f:
+            calibration_data = json.load(f)
+            gaze_max_x = calibration_data["gax_max"]
+            gaze_min_x = calibration_data["gax_min"]
+            gaze_max_y = calibration_data["gay_max"]
+            gaze_min_y = calibration_data["gay_min"]
 
     gaze_center_x = (gaze_max_x + gaze_min_x) / 2  # -0.18
     gaze_center_y = (gaze_max_y + gaze_min_y) / 2  # -0.035

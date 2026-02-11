@@ -1,6 +1,8 @@
 import zmq
 import zmq.asyncio
 import asyncio
+import json
+import os
 from app.services.connection_manager import manager 
 from time import time
 import numpy as np
@@ -69,90 +71,75 @@ async def calibration_task() :
     finally : 
         async with state.calibration_lock : 
             state.calibration_status = state.CalibrationStatus.IDLE
+    
 
-async def process_calibration() :
+
+async def process_calibration():
     global calibration_data
     
-    socket = context.socket(zmq.SUB)
-    socket.setsockopt(zmq.SUBSCRIBE, b"")
-    socket.setsockopt(zmq.RCVHWM, 1)
-    socket.setsockopt(zmq.LINGER, 0)
-    socket.setsockopt(zmq.RCVTIMEO, 5000)
-    # socket.connect(uri_openface_service)
+    # Points de calibration relatifs (x, y) de 0 à 1
+    # Disposition à 9 points couvrant tout l'écran
+    rel_points = [
+        (0.5, 0.5),   # 1. Centre
+        (0.05, 0.05), (0.5, 0.05), (0.95, 0.05), # 2, 3, 4. Ligne du haut
+        (0.05, 0.5),               (0.95, 0.5),  # 5, 6. Milieux latéraux
+        (0.05, 0.95), (0.5, 0.95), (0.95, 0.95)  # 7, 8, 9. Ligne du bas
+    ]
     
-    # print(f"On écoute l'openface service sur : {uri_openface_service} pour la calibration")
+    all_gaze_x = []
+    all_gaze_y = []
     
-    gaze_angle_x_list = []
-    gaze_angle_y_list = []
-    await asyncio.sleep(1) # on attend une seconde le temps que le websocket soit créé
-    
-    message = {"data" : {"value" : "Début de la calibration"}}
-    await manager.broadcast(message=message, client_type="calibration")
     await asyncio.sleep(1)
-    
-    message = {"data" : {"value" : "Regardez à droite à fond"}}
-    await manager.broadcast(message=message, client_type="calibration")
-    
-    start_time = time()
-    while time() - start_time < 20 :
-        data = await socket.recv_json()
-        gaze_angle_x_list.append(data["gaze_angle_x"])
-        gaze_angle_y_list.append(data["gaze_angle_y"])
-    
-    # message = {"data" : {"value" : "Regardez à gauche à fond"}}
-    # await manager.broadcast(message=message, client_type="calibration")
-    
-    # start_time = time()
-    # while time() - start_time < 5 :
-    #     data = await socket.recv_json()
-    #     gaze_angle_x_list.append(data["gaze_angle_x"])
-    #     gaze_angle_y_list.append(data["gaze_angle_y"])
-    
-    # message = {"data" : {"value" : "Regardez en haut à fond"}}
-    # await manager.broadcast(message=message, client_type="calibration")
-    
-    # start_time = time()
-    # while time() - start_time < 5 :
-    #     data = await socket.recv_json()
-    #     gaze_angle_x_list.append(data["gaze_angle_x"])
-    #     gaze_angle_y_list.append(data["gaze_angle_y"])
-    
-    # message = {"data" : {"value" : "Regardez en bas à fond"}}
-    # await manager.broadcast(message=message, client_type="calibration")
-    
-    # start_time = time()
-    # while time() - start_time < 5 :
-    #     data = await socket.recv_json()
-    #     gaze_angle_x_list.append(data["gaze_angle_x"])
-    #     gaze_angle_y_list.append(data["gaze_angle_y"])
-    
-    gaze_angle_x_np = np.stack(gaze_angle_x_list)
-    gaze_angle_x_np = gaze_angle_x_np[~np.isnan(gaze_angle_x_np)]
-    gaze_angle_y_np = np.stack(gaze_angle_y_list)
-    gaze_angle_y_np = gaze_angle_y_np[~np.isnan(gaze_angle_y_np)]
-    
-    gax_max = gaze_angle_x_np.max()
-    gax_min = gaze_angle_x_np.min()
-    gay_max = gaze_angle_y_np.max()
-    gay_min = gaze_angle_y_np.min()
-    
-    message = {"data" : 
-        {"value" : f"Fin calibration, nb frame {gaze_angle_x_np.shape}"}
+    await manager.broadcast({"data": {"type": "instruction", "value": "Début de la calibration. Fixez les points rouges."}}, "calibration")
+    await asyncio.sleep(2)
+
+    for i, (px, py) in enumerate(rel_points):
+        # Envoyer les coordonnées du point au front-end
+        await manager.broadcast({"data": {"type": "target", "x": px, "y": py}}, "calibration")
+        
+        # Attendre la stabilisation (700ms)
+        # TODO ca se justifie dans la doc
+        await asyncio.sleep(0.7)
+        
+        # Collecter les données pendant 1.3s (Total 2s par point)
+        start_point_time = time()
+        while time() - start_point_time < 1.3:
+            try:
+                # Utiliser les données du process_frame au lieu du socket ZMQ
+                landmark = process_frame.process_frame.latest_landmark
+                gaze = process_frame.process_frame.latest_gaze
+                if gaze is not None and len(gaze) >= 2:
+                    all_gaze_x.append(gaze[0])
+                    all_gaze_y.append(gaze[1])
+                # TODO remplace pâr 1/FPS
+                await asyncio.sleep(0.03)  # ~30 Hz
+            except Exception as e:
+                print(f"Erreur calibration: {e}")
+                continue
+
+    # Calcul des bornes après filtrage des NaNs
+    gaze_x_np = np.array(all_gaze_x)
+    gaze_y_np = np.array(all_gaze_y)
+    gaze_x_np = gaze_x_np[~np.isnan(gaze_x_np)]
+    gaze_y_np = gaze_y_np[~np.isnan(gaze_y_np)]
+
+    if len(gaze_x_np) > 0:
+        # On définit les extremums pour le mapping futur
+        calibration_data["data"] = {
+            "gax_max": float(np.percentile(gaze_x_np, 95)), # Utilisation de percentiles pour éviter les outliers
+            "gax_min": float(np.percentile(gaze_x_np, 5)),
+            "gay_max": float(np.percentile(gaze_y_np, 95)),
+            "gay_min": float(np.percentile(gaze_y_np, 5)),
         }
-    await manager.broadcast(message=message, client_type="calibration")
+        print(f"Calibration terminée: {calibration_data}")
+        
+        # Sauvegarde dans le fichier JSON
+        try:
+            calibration_config_path = os.path.join(os.path.dirname(__file__), "..", "config", "calibration_data.json")
+            with open(calibration_config_path, "w") as f:
+                json.dump(calibration_data["data"], f, indent=4)
+            print(f"Données de calibration sauvegardées dans {calibration_config_path}")
+        except Exception as e:
+            print(f"Erreur lors de la sauvegarde de la calibration: {e}")
 
-    calibration_data = {
-        "data": {
-            "gax_max": float(gax_max),
-            "gax_min": float(gax_min),
-            "gay_max": float(gay_max),
-            "gay_min": float(gay_min),
-        }
-    }
-    
-    socket.close()  
-    
-    
-
-
-
+    await manager.broadcast({"data": {"type": "instruction", "value": "Calibration terminée !"}}, "calibration")
