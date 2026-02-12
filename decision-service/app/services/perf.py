@@ -6,6 +6,7 @@ import numpy as np
 from app.core import state
 import cv2
 from app.services import process_frame
+from app.services.interpretation import get_direction_from_gaze
 
 
 
@@ -72,7 +73,7 @@ async def stream_video() :
                 }
                 await manager.broadcast(gaze_data, "gaze")
 
-            # Sending direcion data
+            # Sending direction data
             direction = await get_direction_from_gaze(gaze)
             direction_data = {
                 "direction": direction
@@ -87,22 +88,22 @@ async def stream_video() :
             await asyncio.sleep(1)
             continue
 
-async def get_direction_from_gaze(gaze) :
-    gaze_x = gaze[0]
-    gaze_y = gaze[1]
+# async def get_direction_from_gaze(gaze) :
+#     gaze_x = gaze[0]
+#     gaze_y = gaze[1]
     
-    threshold = 0.1  # Définir un seuil pour éviter les petites variations
+#     threshold = 0.1  # Définir un seuil pour éviter les petites variations
 
-    if abs(gaze_x) < threshold and abs(gaze_y) < threshold :
-        return "CENTER"
+#     if abs(gaze_x) < threshold and 0 < gaze_y< 0.2 :
+#         return "CENTER"
     
-    if abs(gaze_x) >= abs(gaze_y) :
-        if gaze_x > 0 :
-            return "RIGHT"
-        else :
-            return "LEFT"
-    else :
-        if gaze_y > 0 :
-            return "DOWN"
-        else :
-            return "UP"
+#     if abs(gaze_x) >= abs(gaze_y) :
+#         if gaze_x > 0 :
+#             return "RIGHT"
+#         else :
+#             return "LEFT"
+#     else :
+#         if gaze_y > 0.1 :
+#             return "DOWN"
+#         else :
+#             return "UP"

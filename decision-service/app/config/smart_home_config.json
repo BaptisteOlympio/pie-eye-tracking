@@ -1,0 +1,30 @@
+{
+    "SALON": {
+        "devices": [
+            {"id": "light_main", "name": "Lumière Plafond", "type": "binary", "state": false, "state_str": ""},
+            {"id": "shutters", "name": "Volets", "type": "analog", "state": 0, "state_str": "Ouvert à"},
+            {"id": "speaker", "name": "Enceinte", "type": "analog", "state": 30, "state_str": "Son à"},
+            {"id": "tv", "name": "Télévision", "type": "binary", "state": false, "state_str": ""},
+            {"id": "back_menu", "name": "MENU", "type": "navigation", "state": false, "state_str": "RETOUR"}
+        ]
+    },
+    "CUISINE": {
+        "devices": [
+            {"id": "light_main", "name": "Lumière Plafond", "type": "binary", "state": false, "state_str": ""},
+            {"id": "shutters", "name": "Volets", "type": "analog", "state": 0, "state_str": "Ouvert à"},
+            {"id": "speaker", "name": "Gaz", "type": "binary", "state": true, "state_str": "Allumé"},
+            {"id": "back_menu", "name": "MENU", "type": "navigation", "state": false, "state_str": "RETOUR"}
+        ]
+    },
+    "CHAMBRE": {
+        "devices": [
+            {"id": "shutters", "name": "Volets", "type": "analog", "state": 0, "state_str": "Ouvert à"},
+            {"id": "back_menu", "name": "MENU", "type": "navigation", "state": false, "state_str": "RETOUR"}
+        ]
+    },
+    "SDB": {
+        "devices": [
+            {"id": "back_menu", "name": "MENU", "type": "navigation", "state": false, "state_str": "RETOUR"}
+        ]
+    }
+}

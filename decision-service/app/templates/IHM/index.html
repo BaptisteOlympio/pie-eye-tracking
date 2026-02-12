@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Domotique Design</title>
+    <link rel="stylesheet" href="/templates/IHM/style.css" />
+  </head>
+  <body>
+    <div class="main-grid">
+      <div class="grid-cell"><div id="room-display">MAISON</div></div>
+      <div class="grid-cell"><div id="UP" class="segment">--</div></div>
+      <div class="grid-cell">
+        <div id="queue-container">
+          <div style="font-style: italic; font-size: 1rem">Menu Principal</div>
+        </div>
+      </div>
+
+      <div class="grid-cell"><div id="LEFT" class="segment">--</div></div>
+      <div class="grid-cell">
+        <div id="CENTER" class="segment neutral">--</div>
+      </div>
+      <div class="grid-cell"><div id="RIGHT" class="segment">--</div></div>
+
+      <div class="grid-cell debug-area">
+        <div id="debug-text" class="debug-text">...</div>
+      </div>
+      <div class="grid-cell"><div id="DOWN" class="segment">--</div></div>
+      <div class="grid-cell"></div>
+    </div>
+
+    <script src="/templates/IHM/app.js"></script>
+  </body>
+</html>
