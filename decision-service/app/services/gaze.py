@@ -21,16 +21,11 @@ async def gaze_visualisation() :
             state.gaze_visualisation_status = state.GazeVisualisationStatus.NOT_RUNNING
 
 async def process_gaze_visualisation() :
-    
     while True : 
-
         frame = process_frame.process_frame.latest_frame
         landmark = process_frame.process_frame.latest_landmark
         gaze = process_frame.process_frame.latest_gaze
 
-        # data = await socket.recv_json()
-        # x = min(max((data["gaze_angle_x"] - gax_min)/(gax_max - gax_min), 0), 1)
-        # y = min(max((data["gaze_angle_y"] - gay_min)/(gay_max - gay_min), 0), 1)``
         try:
             gaze = {
                 "x" : float(gaze[0]),

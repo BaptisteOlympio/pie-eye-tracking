@@ -16,17 +16,14 @@ from app.config.load_IHM_config import IHM_CONFIG
 
 async def IHM_task() :
     print("------------LAUCH STREAM TASK--------------")
-    # TODO : Ajouter un lock pour éviter de lancer plusieurs fois la même tâche
-    # async with state.video_lock : 
-    #     state.video_status = state.VideoStatus.RUNNING
+    async with state.IHM_lock : 
+        state.IHM_status = state.IHMStatus.RUNNING
     
     try :
         await run_app_logic()
     finally : 
-        pass
-        # TODO : Décommenter quand le lock sera en place
-        # async with state.gaze_visualisation_lock : 
-        #     state.gaze_visualisation_status = state.GazeVisualisationStatus.NOT_RUNNING
+        async with state.IHM_lock : 
+            state.IHM_status = state.IHMStatus.NOT_RUNNING
 
 
 ui_manager = InterfaceManager()
