@@ -11,19 +11,8 @@ from app.services.logic_wheel import DecisionWheel, InterfaceManager
 from app.services.perf import get_direction_from_gaze
 from app.services.interpretation import get_direction_from_gaze
 from app.core import state
+from app.config.load_IHM_config import IHM_CONFIG
 
-# Chargement de la configuration de l'application
-config_path = os.path.join(os.path.dirname(__file__), "..", "config", "app_config.json")
-if os.path.exists(config_path):
-    with open(config_path, "r") as f:
-        app_config = json.load(f)
-else:
-    print("ERREUR: Fichier app_config.json introuvable, utilisation configuration par défaut")
-    app_config = {
-        "wheel": {"seuil_validation": 4, "buffer_limit": 2},
-        "performance": {"frequence_lecture": 5.0},
-        "gaze": {"threshold_horizontal": 0.15, "threshold_vertical": 0.15}
-    }
 
 async def IHM_task() :
     print("------------LAUCH STREAM TASK--------------")
@@ -51,9 +40,9 @@ async def run_app_logic():
         - Send everything to the frontend via WebSocket
     """
     # Chargement des paramètres depuis la config
-    FREQUENCE_LECTURE = app_config["performance"]["frequence_lecture"]
-    seuil_validation = app_config["wheel"]["seuil_validation"]
-    buffer_limit = app_config["wheel"]["buffer_limit"]
+    FREQUENCE_LECTURE = IHM_CONFIG["performance"]["frequence_lecture"]
+    seuil_validation = IHM_CONFIG["wheel"]["seuil_validation"]
+    buffer_limit = IHM_CONFIG["wheel"]["buffer_limit"]
     
     print(f">>> Démarrage Domotique V5 (Design) - {FREQUENCE_LECTURE} Hz")
     print(f">>> Seuil validation: {seuil_validation}, Buffer: {buffer_limit}")

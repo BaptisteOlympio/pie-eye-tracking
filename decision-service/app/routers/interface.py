@@ -1,6 +1,7 @@
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from fastapi.responses import HTMLResponse
 from app.services import gaze
+from app.services import calibration
 from app.services import perf 
 from app.services import process_frame
 from app.services import IHM
@@ -29,7 +30,7 @@ async def get_calibration(background_tasks : BackgroundTasks) :
             detail="La calibration tourne déjà"
         )
         
-    background_tasks.add_task(gaze.calibration_task)
+    background_tasks.add_task(calibration.calibration_task)
     
     with open("app/templates/calibration/index.html") as file:
         return HTMLResponse(content=file.read())
