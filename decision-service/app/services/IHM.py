@@ -1,10 +1,5 @@
-import zmq
-import zmq.asyncio
 import asyncio
-import numpy as np
-import cv2
 import json
-import os
 from app.services.connection_manager import manager 
 from app.services import process_frame
 from app.services.logic_wheel import DecisionWheel, InterfaceManager
@@ -15,7 +10,7 @@ from app.config.load_IHM_config import IHM_CONFIG
 
 
 async def IHM_task() :
-    print("------------LAUCH STREAM TASK--------------")
+    print("------------LAUCH IHM TASK--------------")
     async with state.IHM_lock : 
         state.IHM_status = state.IHMStatus.RUNNING
     
@@ -38,16 +33,14 @@ async def run_app_logic():
     """
     # Chargement des paramètres depuis la config
     FREQUENCE_LECTURE = IHM_CONFIG["performance"]["frequence_lecture"]
-    seuil_validation = IHM_CONFIG["wheel"]["seuil_validation"]
-    buffer_limit = IHM_CONFIG["wheel"]["buffer_limit"]
+    VALIDATION_THRESHOLD = IHM_CONFIG["wheel"]["seuil_validation"]
+    BUFFER_LIMIT = IHM_CONFIG["wheel"]["buffer_limit"]
     
     print(f">>> Démarrage Domotique V5 (Design) - {FREQUENCE_LECTURE} Hz")
-    print(f">>> Seuil validation: {seuil_validation}, Buffer: {buffer_limit}")
+    print(f">>> Seuil validation: {VALIDATION_THRESHOLD}, Buffer: {BUFFER_LIMIT}")
     
-    # 1. Initialisation des composants
-    # driver = FakeListDriver() # Les Yeux (Simulation)
-    wheel = DecisionWheel(seuil_validation=seuil_validation, buffer_limit=buffer_limit) # Le Filtre (Ergonomie)
-    sleep_time = 1.0 / FREQUENCE_LECTURE
+    # Initialisation des composants
+    wheel = DecisionWheel(seuil_validation=VALIDATION_THRESHOLD, buffer_limit=BUFFER_LIMIT) # Le Filtre (Ergonomie)
     
     try:
         while True:
@@ -61,13 +54,13 @@ async def run_app_logic():
             # Mise à jour de la roue de décision avec la nouvelle direction
             wheel_result = wheel.update(current_direction)
             
-            # --- ÉTAPE C : CONTEXTE VISUEL (AVANT ACTION) ---
+            # --- CONTEXTE VISUEL (AVANT ACTION) ---
             # C'est l'astuce pour le problème d'affichage ! 
             # On prend une "photo" de l'interface MAINTENANT, avant de changer l'état.
             # Cela permet d'afficher "OK" sur le bouton "ALLUMER" juste avant qu'il disparaisse.
             context_data = ui_manager.get_ui_context()
             
-            # --- ÉTAPE D : VALIDATION & ACTION ---
+            # --- VALIDATION & ACTION ---
             # Si la roue dit "C'est validé (100%) !"
             if wheel_result["validated"]:
                 # On exécute l'action (Changer lumière, entrer salon...)
@@ -76,7 +69,7 @@ async def run_app_logic():
                 # On remet la roue à zéro pour éviter de re-cliquer tout de suite
                 wheel.reset()
 
-            # --- ÉTAPE E : ENVOI AU HTML ---
+            # --- ENVOI AU HTML ---
             # On regroupe tout (Input + Roue + Contexte UI) dans un gros paquet JSON
             data_to_send = {
                 "direction": wheel_result["direction"], # ex: "UP"
@@ -91,12 +84,11 @@ async def run_app_logic():
                 "center_theme": context_data["center_theme"] 
             }
             
-            # On envoie via WebSocket à la page web
+            # On envoie les données ecrites précédemment via WebSocket à la page web
             await manager.broadcast(json.dumps(data_to_send), "IHM")
             
-            # --- ÉTAPE F : ATTENTE ---
-            # On dort un peu pour respecter la fréquence (0.25s)
-            await asyncio.sleep(sleep_time)
+            
+            await asyncio.sleep(1.0 / FREQUENCE_LECTURE)
             
     except Exception as e:
         print(f"Erreur App: {e}")

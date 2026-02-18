@@ -1,10 +1,10 @@
 {
     "wheel": {
-        "seuil_validation": 20,
-        "buffer_limit": 10
+        "seuil_validation": 30,
+        "buffer_limit": 15
     },
     "performance": {
-        "frequence_lecture": 10.0
+        "frequence_lecture": 15.0
     },
     "gaze": {
         "threshold_horizontal": 0.15,

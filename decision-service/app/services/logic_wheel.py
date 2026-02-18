@@ -130,12 +130,12 @@ class SmartHomeSystem:
             if action == "UP": device["state"] = True
             if action == "DOWN": device["state"] = False
             
-        # Logique pour device incrélmental de 0 à 100% par tranche de 10
+        # Logique pour device incrélmental de 0 à 100% par tranche d'increment 
         elif device["type"] == "analog":
             if action == "UP": 
-                device["state"] = min(100, device["state"] + 10)
+                device["state"] = min(100, device["state"] + device["increment"])
             if action == "DOWN": 
-                device["state"] = max(0, device["state"] - 10)
+                device["state"] = max(0, device["state"] - device["increment"])
         
         return device["state"]
 
