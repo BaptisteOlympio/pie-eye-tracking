@@ -20,3 +20,4 @@ openface-service/script_test/grpc
 *.DS_Store
 *.vscode/
 *.ipynb
+**/devcontainer.json
