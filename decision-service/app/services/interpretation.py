@@ -1,6 +1,7 @@
 import os 
 import json
 from app.config import load_calibration_data
+from app.config.load_IHM_config import IHM_CONFIG
 
 async def get_direction_from_gaze(gaze) :
 
@@ -22,8 +23,8 @@ async def get_direction_from_gaze(gaze) :
    
 
     # Seuil adapté aux vraies plages (30% de la plage)
-    threshold_x = (GAZE_MAX_X - GAZE_MIN_X) * 0.3  # ~0.012
-    threshold_y = (GAZE_MAX_Y - GAZE_MIN_Y) * 0.3  # ~0.039
+    threshold_x = (GAZE_MAX_X - GAZE_MIN_X) * IHM_CONFIG["gaze"]["center_threshold_x"]  # threshold qui defini le centre
+    threshold_y = (GAZE_MAX_Y - GAZE_MIN_Y) * IHM_CONFIG["gaze"]["center_threshold_y"]  # threshold qui defini le centre
 
     # Si on est au centre sur les deux axes
     if abs(gaze_x - gaze_center_x) < threshold_x and abs(gaze_y - gaze_center_y) < threshold_y:
