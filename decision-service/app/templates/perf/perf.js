@@ -25,6 +25,7 @@ ws.onmessage = (event) => {
 const wsGaze = new WebSocket(`ws://${location.host}/ws?type=gaze`);
 
 wsGaze.onmessage = (event) => {
+  console.log("WebSocket gaze reçu:", event.data);
   const gazeData = JSON.parse(event.data);
   document.getElementById("gaze-x").innerText = gazeData.gaze_x.toFixed(4);
   document.getElementById("gaze-y").innerText = gazeData.gaze_y.toFixed(4);

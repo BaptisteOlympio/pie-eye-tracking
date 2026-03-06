@@ -1,0 +1,150 @@
+/* --- GLOBAL --- */
+body { 
+    background-color: #121212; 
+    color: white; 
+    font-family: 'Segoe UI', sans-serif; 
+    margin: 0; 
+    height: 100vh; 
+    width: 100vw; 
+    overflow: hidden; 
+}
+
+.main-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr; 
+    grid-template-rows: 1fr 1fr 1fr; 
+    height: 100%; 
+    width: 100%; 
+}
+
+.grid-cell { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    position: relative; 
+}
+
+/* --- INFO PIÈCE (Haut-Gauche) --- */
+#room-display {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #4CAF50;
+    border-bottom: 3px solid #4CAF50;
+    padding-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* --- INFO QUEUE (Haut-Droite) - ZOOM --- */
+#queue-container {
+    width: 90%;
+    text-align: left;
+    font-size: 1.3rem; /* Beaucoup plus gros (avant 0.9) */
+    color: #888;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 15px;
+    line-height: 1.6;
+}
+
+.queue-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
+}
+
+.queue-item.active {
+    font-weight: bold;
+    color: #4CAF50;
+    font-size: 1.5rem; /* L'élément actif est encore plus gros */
+}
+
+.queue-item span:last-child {
+    font-family: monospace;
+    color: #ddd;
+}
+
+/* Colorier le statut actif aussi */
+.queue-item.active span:last-child {
+    color: #4CAF50; 
+}
+
+/* --- BOUTONS --- */
+.segment {
+    width: 220px; 
+    height: 220px; 
+    border-radius: 50%;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    font-weight: bold; 
+    font-size: 1.2rem; 
+    text-align: center; 
+    line-height: 1.2; 
+    color: #ddd; 
+    text-transform: uppercase; 
+    white-space: pre-wrap;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    background-color: #2a2a2a; 
+    border: 6px solid #444;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+/* --- THEMES POUR LE CERCLE CENTRAL --- */
+/* Défaut */
+#CENTER.neutral {
+    background-color: #2a2a2a;
+    color: #aaa;
+    border-color: #666;
+}
+
+/* LUMIÈRE ALLUMÉE : Jaune Pâle + Texte Noir (Lisible) */
+#CENTER.light-on {
+    background-color: #FFEB3B !important; 
+    color: #000 !important;
+    border-color: #FBC02D !important;
+    box-shadow: 0 0 40px rgba(255, 235, 59, 0.4);
+    text-shadow: none; /* Pas d'ombre sur texte noir */
+}
+
+/* LUMIÈRE ÉTEINTE : Très Sombre */
+#CENTER.light-off {
+    background-color: #0f0f0f !important;
+    color: #555 !important;
+    border-color: #333 !important;
+}
+
+#CENTER { 
+    width: 180px; 
+    height: 180px; 
+    z-index: 10; 
+}
+
+.disabled { 
+    opacity: 0.2; 
+    border-color: #222; 
+}
+
+.validated { 
+    background-color: #4CAF50 !important; 
+    box-shadow: 0 0 50px #4CAF50 !important; 
+    border-color: #fff !important; 
+    color: #fff !important; 
+    transform: scale(1.1); 
+    z-index: 20; 
+}
+
+.debug-area { 
+    align-items: flex-end !important; 
+    justify-content: flex-start !important; 
+    padding: 20px; 
+}
+
+.debug-text { 
+    font-family: monospace; 
+    color: #4CAF50; 
+    opacity: 0.5; 
+    font-size: 0.8rem;
+}

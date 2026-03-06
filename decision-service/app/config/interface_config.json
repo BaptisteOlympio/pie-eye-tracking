@@ -1,0 +1,43 @@
+{
+    "menu_principal": {
+        "room_name": "MENU PRINCIPAL",
+        "center_label": "MAISON",
+        "directions": {
+            "UP": "SALON", "LEFT": "CUISINE", "RIGHT": "CHAMBRE", "DOWN": "SDB"
+        }
+    },
+    "room_control": {
+        "navigation": {
+            "previous": "PREC.",
+            "next": "SUIV."
+        },
+        "actions": {
+            "binary": {
+                "on": {
+                    "up": "",
+                    "down": "ETEINDRE"
+                },
+                "off": {
+                    "up": "ALLUMER",
+                    "down": ""
+                }
+            },
+            "analog": {
+                "up": "+",
+                "down": "-"
+            }
+        },
+        "themes": {
+            "light_on": "light-on",
+            "light_off": "light-off",
+            "neutral": "neutral"
+        }
+    },
+    "default_labels": {
+        "UP": "",
+        "DOWN": "",
+        "LEFT": "",
+        "RIGHT": "",
+        "CENTER": ""
+    }
+}
