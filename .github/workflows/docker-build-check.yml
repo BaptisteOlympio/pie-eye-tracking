@@ -1,0 +1,40 @@
+name: Docker build check
+
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build ${{ matrix.service }} Docker image
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: decision-service
+            context: ./decision-service
+          - service: openface-service
+            context: ./openface-service
+          - service: video-service
+            context: ./video-service
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          push: false
+          load: false
+          tags: pie-eye-tracking/${{ matrix.service }}:ci-check
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
