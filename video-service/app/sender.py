@@ -16,6 +16,8 @@ parser.add_argument("-f", "--input_file", type=str, default="/workspace/data/tes
 parser.add_argument("--device", type=int, default=-1)
 parser.add_argument("--port", type=int, default=8080)
 parser.add_argument("--fps", type=int, default=30)
+parser.add_argument("--width", type=int, default=640, help="Output frame width in pixels")
+parser.add_argument("--height", type=int, default=480, help="Output frame height in pixels")
 args = parser.parse_args()
 
 
@@ -35,8 +37,8 @@ else :
     input_video = device
 
 FPS = args.fps
-HEIGHT = 640
-WIDTH = 480
+WIDTH = args.width
+HEIGHT = args.height
 
 context = zmq.asyncio.Context()
 
@@ -56,8 +58,8 @@ async def sender():
                 if not ret:
                     print("Fin de la vidéo")
                     break
-                # Downscale if needed
-                frame = cv2.resize(frame, (HEIGHT, WIDTH))
+                # Resize frames to the configured output dimensions
+                frame = cv2.resize(frame, (WIDTH, HEIGHT))
                 frame = np.flip(frame, axis=1)
 
                 await socket.send_multipart([

@@ -43,8 +43,10 @@ These two services need to connect to a third one, video service.
 The purpose of the project is to use the webcam as the video source. I am using WSL so I can't use the webcam in WSL directly. I am running the script on my Windows host.
 Copy the script `video-service/app/sender.py` in your Windows and start :
 ```bash
-python sender.py --device 0
+python sender.py --device 0 --width 640 --height 480
 ```
+Use `--width` and `--height` to configure the output frame size instead of relying on hardcoded dimensions.
+
 An IP address should be printed, and you can enter the IP and the port in http://localhost:8083/interface/perf and then `Send IP`. The video should appear! 
 
 
@@ -97,4 +99,3 @@ Enter the ip and port in the page ``perf`` and send ip. The video with the landm
 
 
  -->
- 
