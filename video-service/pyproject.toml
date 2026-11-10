@@ -1,0 +1,9 @@
+[project]
+name = "video-service"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "numpy>=2.5.4",
+    "opencv-python>=5.0.0.93",
+    "pyzmq>=27.3.0",
+]
