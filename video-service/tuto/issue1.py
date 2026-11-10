@@ -1,11 +1,13 @@
 import argparse
 
-# On récupère les arguments 
+# On récupère les arguments
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--stream_loop', action='store_true')
-parser.add_argument("-f", "--input_file", type=str, default="/workspace/data/test_gouget_cut.mp4")
+parser.add_argument("--stream_loop", action="store_true")
+parser.add_argument(
+    "-f", "--input_file", type=str, default="/workspace/data/test_gouget_cut.mp4"
+)
 parser.add_argument("--device", type=int, default=-1)
 parser.add_argument("--port", type=int, default=8080)
 parser.add_argument("--fps", type=int, default=30)

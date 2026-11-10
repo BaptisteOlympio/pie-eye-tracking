@@ -14,7 +14,7 @@ while True:
 
     cv2.imshow("Capture", frame)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord("q"):
         break
 
 cap.release()
@@ -24,9 +24,3 @@ video_array = np.array(frames)
 for f in video_array:
     print(f)
 print(video_array.shape)
-
-
-
-
-
-

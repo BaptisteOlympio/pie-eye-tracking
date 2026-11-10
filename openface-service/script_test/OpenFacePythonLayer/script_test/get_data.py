@@ -8,21 +8,22 @@ import zmq.asyncio
 import numpy as np
 
 port = "8080"
-ip = "video-service" #jsute en phase de test
+ip = "video-service"  # jsute en phase de test
 
 context = zmq.asyncio.Context()
 socket = context.socket(zmq.SUB)
-socket.setsockopt(zmq.SUBSCRIBE, b"") 
+socket.setsockopt(zmq.SUBSCRIBE, b"")
 socket.connect(f"tcp://{ip}:{port}")
 
 print(f"Connected to server at {ip}:{port}")
+
 
 async def recv_msg():
     while True:
         dtype_b, shape_b, data_b = await socket.recv_multipart()
         dtype = np.dtype(dtype_b.decode())
         shape = tuple(map(int, shape_b.decode().strip("()").split(",")))
-        
+
         arr = np.frombuffer(data_b, dtype=dtype).reshape(shape)
         # print("Received:", arr.shape)
         print(arr)

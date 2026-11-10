@@ -15,17 +15,19 @@ socket = context.socket(zmq.SUB)
 socket.connect(f"tcp://{ip}:{port}")
 socket.setsockopt(zmq.SUBSCRIBE, b"")
 
+
 async def recv_msg():
     while True:
         dtype_b, shape_b, data_b = await socket.recv_multipart()
         dtype = np.dtype(dtype_b.decode())
         shape = tuple(map(int, shape_b.decode().strip("()").split(",")))
-        
+
         arr = np.frombuffer(data_b, dtype=dtype).reshape(shape)
         print("Received:", arr)
         cv2.imshow("Received Frame", arr)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
+
 
 asyncio.run(recv_msg())
 

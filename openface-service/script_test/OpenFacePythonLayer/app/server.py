@@ -11,7 +11,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--ip_vs", type=str)
 parser.add_argument("--port_vs", type=str)
-parser.add_argument('--from_file', action='store_true')
+parser.add_argument("--from_file", action="store_true")
 args = parser.parse_args()
 
 ip_vs = args.ip_vs
@@ -51,7 +51,7 @@ def _write_to_ffmpeg(pipe, data: bytes) -> bool:
 
 
 async def write_frame():
-    if from_file :
+    if from_file:
         return
     socket_video_service = context.socket(zmq.SUB)
     socket_video_service.setsockopt(zmq.SUBSCRIBE, b"")
@@ -60,16 +60,30 @@ async def write_frame():
     socket_video_service.setsockopt(zmq.RCVHWM, 1)
     socket_video_service.setsockopt(zmq.LINGER, 0)
     socket_video_service.connect(f"tcp://{ip_vs}:{port_vs}")
-    
-    
+
     print("[video-svc] launching ffmpeg to /dev/video0")
-    ffmpeg = subprocess.Popen([
-        "ffmpeg", "-y",
-        "-f", "rawvideo", "-pix_fmt", "bgr24",
-        "-s", f"{WIDTH}x{HEIGHT}", "-r", "15",
-        "-i", "-", "-f", "v4l2", "/dev/video0"
-    ], stdin=subprocess.PIPE, bufsize=0)
-    
+    ffmpeg = subprocess.Popen(
+        [
+            "ffmpeg",
+            "-y",
+            "-f",
+            "rawvideo",
+            "-pix_fmt",
+            "bgr24",
+            "-s",
+            f"{WIDTH}x{HEIGHT}",
+            "-r",
+            "15",
+            "-i",
+            "-",
+            "-f",
+            "v4l2",
+            "/dev/video0",
+        ],
+        stdin=subprocess.PIPE,
+        bufsize=0,
+    )
+
     print(f"[video-svc] Connected to tcp://{ip_vs}:{port_vs}")
     async for parts in _recv_multipart_async(socket_video_service):
         if not parts or len(parts) != 3:
@@ -86,18 +100,33 @@ async def write_frame():
 
         if frame.size == 0:
             continue
-        
+
         data_bytes = frame.tobytes()
         loop = asyncio.get_running_loop()
-        ok = await loop.run_in_executor(None, _write_to_ffmpeg, ffmpeg.stdin, data_bytes)
+        ok = await loop.run_in_executor(
+            None, _write_to_ffmpeg, ffmpeg.stdin, data_bytes
+        )
         if not ok:
             print("[video-svc] ffmpeg pipe closed; stopping writer")
             break
 
+
 async def gaze_sender():
-    columns = ["frame", "face_id", "timestamp", "confidence", "success", "gaze_0_x",
-               "gaze_0_y", "gaze_0_z", "gaze_1_x", "gaze_1_y", "gaze_1_z",
-               "gaze_angle_x", "gaze_angle_y"]
+    columns = [
+        "frame",
+        "face_id",
+        "timestamp",
+        "confidence",
+        "success",
+        "gaze_0_x",
+        "gaze_0_y",
+        "gaze_0_z",
+        "gaze_1_x",
+        "gaze_1_y",
+        "gaze_1_z",
+        "gaze_angle_x",
+        "gaze_angle_y",
+    ]
 
     port_gaze_data = "8081"
 
@@ -114,10 +143,12 @@ async def gaze_sender():
             return await loop.run_in_executor(
                 None, pd.read_csv, "/workspace/data/data.csv"
             )
-        except (pd.errors.EmptyDataError,
-                pd.errors.ParserError,
-                FileNotFoundError,
-                EOFError):
+        except (
+            pd.errors.EmptyDataError,
+            pd.errors.ParserError,
+            FileNotFoundError,
+            EOFError,
+        ):
             return None
 
     i = 0
@@ -126,25 +157,24 @@ async def gaze_sender():
 
         if df is not None and not df.empty:
             try:
-                if from_file :
+                if from_file:
                     i = i % len(df.index)
                     row = df[columns].loc[i].to_dict()
                     i += 1
-                else : 
+                else:
                     row = df.tail(1)[columns].to_dict("records")[0]
                 await socket_gaze_sender.send_json(row)
-                
+
             except Exception:
                 # corrupted row or missing columns
                 pass
 
-        await asyncio.sleep(1/30)
+        await asyncio.sleep(1 / 30)
 
-async def main() :
-    await asyncio.gather(
-        write_frame(),
-        gaze_sender()
-    )
 
-if __name__ == "__main__" :
+async def main():
+    await asyncio.gather(write_frame(), gaze_sender())
+
+
+if __name__ == "__main__":
     asyncio.run(main())

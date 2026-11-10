@@ -5,14 +5,29 @@ class SmartHomeSystem:
         self.house_data = {
             "SALON": {
                 "devices": [
-                    {"id": "light_main", "name": "Lumière Plafond", "type": "binary", "state": False}, # False = Éteint
-                    {"id": "shutters",   "name": "Volets",          "type": "analog", "state": 0},     # 0% = Fermé
-                    {"id": "speaker",    "name": "Enceinte",        "type": "analog", "state": 30}     # Volume 30%
+                    {
+                        "id": "light_main",
+                        "name": "Lumière Plafond",
+                        "type": "binary",
+                        "state": False,
+                    },  # False = Éteint
+                    {
+                        "id": "shutters",
+                        "name": "Volets",
+                        "type": "analog",
+                        "state": 0,
+                    },  # 0% = Fermé
+                    {
+                        "id": "speaker",
+                        "name": "Enceinte",
+                        "type": "analog",
+                        "state": 30,
+                    },  # Volume 30%
                 ]
             },
-            "CUISINE": { "devices": [] }, # Vide pour l'instant
-            "CHAMBRE": { "devices": [] },
-            "SDB":     { "devices": [] }
+            "CUISINE": {"devices": []},  # Vide pour l'instant
+            "CHAMBRE": {"devices": []},
+            "SDB": {"devices": []},
         }
 
     def get_room_devices(self, room_name):
@@ -24,20 +39,23 @@ class SmartHomeSystem:
         action: "UP" ou "DOWN"
         """
         device = self.house_data[room]["devices"][device_index]
-        
+
         # Logique pour LUMIÈRE (On/Off)
         if device["type"] == "binary":
-            if action == "UP": device["state"] = True
-            if action == "DOWN": device["state"] = False
-            
+            if action == "UP":
+                device["state"] = True
+            if action == "DOWN":
+                device["state"] = False
+
         # Logique pour VOLETS et SON (0 à 100%)
         elif device["type"] == "analog":
-            if action == "UP": 
+            if action == "UP":
                 device["state"] = min(100, device["state"] + 10)
-            if action == "DOWN": 
+            if action == "DOWN":
                 device["state"] = max(0, device["state"] - 10)
-        
+
         return device["state"]
+
 
 # Instance unique
 home_system = SmartHomeSystem()

@@ -17,10 +17,13 @@ socket.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
 
 # Process 5 updates
 total_value = 0
-for update_nbr in range (5):
+for update_nbr in range(5):
     string = socket.recv()
     topic, messagedata = string.split()
     total_value += int(messagedata)
     print(topic, messagedata)
 
-print("Average messagedata value for topic '%s' was %dF" % (topicfilter, total_value / update_nbr))
+print(
+    "Average messagedata value for topic '%s' was %dF"
+    % (topicfilter, total_value / update_nbr)
+)

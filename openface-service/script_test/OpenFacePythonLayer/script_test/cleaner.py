@@ -18,4 +18,3 @@ while True:
         print(f"Error processing file: {e}")
 
     time.sleep(sleep_time)
-
