@@ -7,10 +7,23 @@ import zmq.asyncio
 
 context = zmq.asyncio.Context()
 
+
 async def gaze_sender():
-    columns = ["frame", "face_id", "timestamp", "confidence", "success", "gaze_0_x",
-               "gaze_0_y", "gaze_0_z", "gaze_1_x", "gaze_1_y", "gaze_1_z",
-               "gaze_angle_x", "gaze_angle_y"]
+    columns = [
+        "frame",
+        "face_id",
+        "timestamp",
+        "confidence",
+        "success",
+        "gaze_0_x",
+        "gaze_0_y",
+        "gaze_0_z",
+        "gaze_1_x",
+        "gaze_1_y",
+        "gaze_1_z",
+        "gaze_angle_x",
+        "gaze_angle_y",
+    ]
 
     port_gaze_data = "8081"
 
@@ -27,10 +40,12 @@ async def gaze_sender():
             return await loop.run_in_executor(
                 None, pd.read_csv, "/workspace/data/data.csv"
             )
-        except (pd.errors.EmptyDataError,
-                pd.errors.ParserError,
-                FileNotFoundError,
-                EOFError):
+        except (
+            pd.errors.EmptyDataError,
+            pd.errors.ParserError,
+            FileNotFoundError,
+            EOFError,
+        ):
             return None
 
     while True:
@@ -44,12 +59,12 @@ async def gaze_sender():
                 # corrupted row or missing columns
                 pass
 
-        await asyncio.sleep(1/30)
+        await asyncio.sleep(1 / 30)
 
-async def main() :
-    await asyncio.gather(
-        gaze_sender()
-    )
 
-if __name__ == "__main__" :
+async def main():
+    await asyncio.gather(gaze_sender())
+
+
+if __name__ == "__main__":
     asyncio.run(main())

@@ -12,7 +12,12 @@ class ArrayRequest(_message.Message):
     image: bytes
     dtype: bytes
     shape: bytes
-    def __init__(self, image: _Optional[bytes] = ..., dtype: _Optional[bytes] = ..., shape: _Optional[bytes] = ...) -> None: ...
+    def __init__(
+        self,
+        image: _Optional[bytes] = ...,
+        dtype: _Optional[bytes] = ...,
+        shape: _Optional[bytes] = ...,
+    ) -> None: ...
 
 class MessageResponse(_message.Message):
     __slots__ = ("message",)

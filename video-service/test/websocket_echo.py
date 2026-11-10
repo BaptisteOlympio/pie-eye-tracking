@@ -2,10 +2,12 @@ import asyncio
 import websockets
 from websockets.exceptions import InvalidHandshake
 
+
 async def echo(websocket):
     async for message in websocket:
         print("Received and echoing message: " + message, flush=True)
         await websocket.send(message)
+
 
 async def handle_http(reader, writer):
     """Handle plain HTTP requests for health checks."""
@@ -38,19 +40,26 @@ async def handle_http(reader, writer):
     writer.close()
     await writer.wait_closed()
 
+
 async def main():
     # Start WebSocket server
     port_websocket = 8080
     ws_server = await websockets.serve(echo, "0.0.0.0", port_websocket)
-    print(f"✅ WebSocket echo server started on ws://0.0.0.0:{port_websocket}", flush=True)
+    print(
+        f"✅ WebSocket echo server started on ws://0.0.0.0:{port_websocket}", flush=True
+    )
 
     # Start HTTP health-check server (on same port)
     port_http = 8081
     http_server = await asyncio.start_server(handle_http, "0.0.0.0", port_http)
-    print(f"✅ HTTP health endpoint ready at http://localhost:{port_http}/health", flush=True)
+    print(
+        f"✅ HTTP health endpoint ready at http://localhost:{port_http}/health",
+        flush=True,
+    )
 
-    async with ws_server,http_server: #  
+    async with ws_server, http_server:  #
         await asyncio.Future()  # Run forever
+
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -43,9 +43,11 @@ html = """
 </html>
 """
 
+
 @app.get("/")
 async def get():
     return HTMLResponse(html)
+
 
 # WebSocket manager
 class ConnectionManager:
@@ -63,7 +65,9 @@ class ConnectionManager:
         for connection in self.active_connections:
             await connection.send_text(message)
 
+
 manager = ConnectionManager()
+
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -85,10 +89,11 @@ async def zmq_subscriber():
 
     while True:
         data = await socket.recv_json()
-        x = 0.5*(data["gaze_angle_x"] + 0.195)/(0.056 + 0.195) 
-        y = 0.5*(data["gaze_angle_y"] + 0.150)/(0.177 + 0.150) 
+        x = 0.5 * (data["gaze_angle_x"] + 0.195) / (0.056 + 0.195)
+        y = 0.5 * (data["gaze_angle_y"] + 0.150) / (0.177 + 0.150)
         message = json.dumps({"x": x, "y": y})
         await manager.broadcast(message)
+
 
 # Run ZMQ subscriber in background
 @app.on_event("startup")

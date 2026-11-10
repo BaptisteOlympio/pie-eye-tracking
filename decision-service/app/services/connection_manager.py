@@ -6,10 +6,12 @@ class ConnectionManager:
     def __init__(self):
         self.active_connections: list[Dict[str, WebSocket]] = []
 
-    async def connect(self, websocket: WebSocket, client_type : str):
+    async def connect(self, websocket: WebSocket, client_type: str):
         await websocket.accept()
         print("création de la connection avec client type : ", client_type)
-        self.active_connections.append({"client_type" : client_type, "websocket" : websocket})
+        self.active_connections.append(
+            {"client_type": client_type, "websocket": websocket}
+        )
         print("nombre de connection :", len(self.active_connections))
 
     def disconnect(self, websocket_or_conn):
@@ -28,19 +30,18 @@ class ConnectionManager:
                 self.active_connections.remove(dict_websocket)
                 return
 
-
     async def broadcast(self, data, client_type):
         disconnected = []
         # iterate over a copy of the list to avoid issues removing items while iterating
         for conn in list(self.active_connections):
-            if conn["client_type"] == client_type :
-                if conn["client_type"] == "video" :
-                    try : 
+            if conn["client_type"] == client_type:
+                if conn["client_type"] == "video":
+                    try:
                         await conn["websocket"].send_bytes(data)
                     except (WebSocketDisconnect, RuntimeError, ConnectionResetError):
                         disconnected.append(conn["websocket"])
-                        
-                else : 
+
+                else:
                     try:
                         await conn["websocket"].send_json(data)
                     except (WebSocketDisconnect, RuntimeError, ConnectionResetError):
@@ -49,5 +50,6 @@ class ConnectionManager:
 
         for ws in disconnected:
             self.disconnect(ws)
+
 
 manager = ConnectionManager()

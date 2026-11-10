@@ -6,7 +6,7 @@ import zmq.asyncio
 import argparse
 import sys
 
-# On récupère les arguments 
+# On récupère les arguments
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--ip", type=str)
@@ -26,6 +26,7 @@ socket.setsockopt(zmq.RCVHWM, 1)
 socket.setsockopt(zmq.LINGER, 0)
 socket.connect(uri)
 
+
 async def _recv_multipart_async(socket):
     """Yield multipart messages from an async zmq socket."""
     while True:
@@ -36,9 +37,10 @@ async def _recv_multipart_async(socket):
             return
         yield parts
 
+
 async def recv_msg():
     global latest_frame
-    async for parts in _recv_multipart_async(socket=socket) : 
+    async for parts in _recv_multipart_async(socket=socket):
         if not parts or len(parts) != 3:
             # malformed message, skip
             continue
@@ -47,18 +49,19 @@ async def recv_msg():
         shape = tuple(map(int, shape_b.decode().strip("()").split(",")))
         arr = np.frombuffer(data_b, dtype=dtype).reshape(shape)
         latest_frame = arr
-        
+
 
 async def display_loop():
     global latest_frame
     while True:
         if latest_frame is not None:
             cv2.imshow("test", latest_frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             sys.exit(0)
             break
-        
+
         await asyncio.sleep(0.01)  # yield to the event loop
+
 
 async def main():
     # Run both tasks concurrently
@@ -66,6 +69,7 @@ async def main():
         recv_msg(),
         display_loop(),
     )
+
 
 if __name__ == "__main__":
     try:

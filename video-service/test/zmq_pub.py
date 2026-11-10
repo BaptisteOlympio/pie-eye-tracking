@@ -18,6 +18,7 @@ socket = context.socket(zmq.PUB)
 socket.bind(f"tcp://*:{port}")
 print(f"Publisher bound to tcp://*:{port}")
 
+
 async def send_msg():
     await asyncio.sleep(0.5)  # 🔥 allow subscribers to connect
     i = 0
@@ -28,12 +29,11 @@ async def send_msg():
 
         # Send array as 3-part multipart message:
         # [dtype, shape, raw_bytes]
-        await socket.send_multipart([
-            str(data.dtype).encode(),
-            str(data.shape).encode(),
-            data.tobytes()
-            ])
+        await socket.send_multipart(
+            [str(data.dtype).encode(), str(data.shape).encode(), data.tobytes()]
+        )
         await asyncio.sleep(1)
+
 
 asyncio.run(send_msg())
 
@@ -48,7 +48,7 @@ asyncio.run(send_msg())
 #         while True:
 #             ret, frame = cap.read()
 #             if not ret:
-                
+
 #                 raise KeyboardInterrupt
 #             # Downscale if needed
 #             frame = cv2.resize(frame, (640, 480))

@@ -23,9 +23,9 @@ from app.services import process_frame
 #         await asyncio.gather(
 #             process_task,
 #             return_exceptions=True,
-        # )
+# )
 
-app = FastAPI() # lifespan=lifespan
+app = FastAPI()  # lifespan=lifespan
 
 
 app.mount("/templates", StaticFiles(directory="app/templates"), name="templates")
