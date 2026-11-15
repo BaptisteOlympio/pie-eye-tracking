@@ -1,18 +1,15 @@
 FROM python:3.12-slim
 
-COPY requirements.txt .
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
-RUN pip install -r requirements.txt
-
 WORKDIR /app
 
-RUN mkdir -p ./app
+COPY pyproject.toml uv.lock ./
 
-COPY app/ ./app/
+RUN uv sync --frozen
 
-# TODO Do not create the workspace here but in the devcontainer part. 
-RUN mkdir -p /workspace
+COPY ./app .
 
 EXPOSE 8083

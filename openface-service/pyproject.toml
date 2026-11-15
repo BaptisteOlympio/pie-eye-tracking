@@ -1,0 +1,11 @@
+[project]
+name = "openface-service"
+version = "0.1.0"
+requires-python = ">=3.8"
+dependencies = [
+    "grpcio>=1.70.0",
+    "numpy>=1.24.4",
+    "opencv-python>=5.0.0.93",
+    "protobuf>=5.29.6",
+    "pyzmq>=27.1.0",
+]
