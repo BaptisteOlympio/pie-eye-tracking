@@ -5,7 +5,6 @@ import numpy as np
 
 import sys
 
-sys.path.append("/workspace/app/services")
 sys.path.append("/app/app/services")
 import grpc
 import app.services.openfaceservice_pb2_grpc as openfaceservice_pb2_grpc
