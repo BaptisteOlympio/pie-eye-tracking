@@ -1,5 +1,5 @@
 {
-  // Name of the container, 
+  // Name of the dev container, 
   "name": "openface-service DevContainer",
 
   // Location of the build

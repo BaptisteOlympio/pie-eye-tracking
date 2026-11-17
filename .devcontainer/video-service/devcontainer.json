@@ -1,13 +1,19 @@
 {
+  // Name of the dev container
   "name": "Video Service DevContainer",
+  // Location of the build
   "build": {
     "dockerfile": "../../video-service/Dockerfile"
   },
-  "workspaceFolder": "/workspace",
+  // I use /app here because the application is created in /app (cf Dockerfile)
+  // I am using uv that create a .venv in /app, so I am using the same one
+  "workspaceFolder": "/app",
   "mounts": [
-    "source=${localWorkspaceFolder}/video-service,target=/workspace,type=bind"
+    "source=${localWorkspaceFolder}/video-service,target=/app,type=bind"
   ],
-  "appPort": ["8080:8080"],
+  "appPort": [
+    "8080:8080"
+  ],
   "customizations": {
     "vscode": {
       "settings": {},
