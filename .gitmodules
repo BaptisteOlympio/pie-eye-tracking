@@ -1,3 +1,0 @@
-[submodule "openface-service/OpenFace"]
-	path = openface-service/OpenFace
-	url = https://github.com/BaptisteOlympio/OpenFace.git
