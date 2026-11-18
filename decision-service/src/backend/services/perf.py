@@ -1,12 +1,12 @@
 import zmq
 import zmq.asyncio
 import asyncio
-from app.services.connection_manager import manager
+from backend.services.connection_manager import manager
 import numpy as np
-from app.core import state
+from backend.core import state
 import cv2
-from app.services import process_frame
-from app.services.interpretation import get_direction_from_gaze
+from backend.services import process_frame
+from backend.services.interpretation import get_direction_from_gaze
 
 
 async def video_task():

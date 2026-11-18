@@ -13,6 +13,9 @@ ENV UV_LINK_MODE=copy
 # Ensure installed tools can be executed out of the box
 ENV UV_TOOL_BIN_DIR=/usr/local/bin
 
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 WORKDIR /app
 
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
@@ -31,7 +34,5 @@ COPY src src
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen
-
-ENV PATH="/app/.venv/bin:$PATH"
 
 EXPOSE 8083

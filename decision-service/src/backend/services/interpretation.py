@@ -1,7 +1,7 @@
 import os
 import json
-from app.config import load_calibration_data
-from app.config.load_IHM_config import IHM_CONFIG
+from backend.config import load_calibration_data
+from backend.config.load_IHM_config import IHM_CONFIG
 
 
 async def get_direction_from_gaze(gaze):

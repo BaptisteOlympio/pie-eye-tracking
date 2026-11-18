@@ -1,12 +1,12 @@
 import asyncio
 import json
-from app.services.connection_manager import manager
-from app.services import process_frame
-from app.services.logic_wheel import DecisionWheel, InterfaceManager
-from app.services.perf import get_direction_from_gaze
-from app.services.interpretation import get_direction_from_gaze
-from app.core import state
-from app.config.load_IHM_config import IHM_CONFIG
+from backend.services.connection_manager import manager
+from backend.services import process_frame
+from backend.services.logic_wheel import DecisionWheel, InterfaceManager
+from backend.services.perf import get_direction_from_gaze
+from backend.services.interpretation import get_direction_from_gaze
+from backend.core import state
+from backend.config.load_IHM_config import IHM_CONFIG
 
 
 async def IHM_task():

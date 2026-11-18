@@ -1,5 +1,5 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from app.services.connection_manager import manager
+from backend.services.connection_manager import manager
 import asyncio
 
 ws_router = APIRouter()

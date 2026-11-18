@@ -2,10 +2,13 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 import asyncio
 from fastapi.staticfiles import StaticFiles
-from app.routers.interface import interface_router
-from app.routers.ws import ws_router
-from app.routers.configuration import configuration_router
-from app.services import process_frame
+from backend.routers.interface import interface_router
+from backend.routers.ws import ws_router
+from backend.routers.configuration import configuration_router
+from backend.services import process_frame
+from pathlib import Path
+
+root_path = Path(__file__).parent
 
 # @asynccontextmanager
 # async def lifespan(app: FastAPI):
@@ -28,7 +31,7 @@ from app.services import process_frame
 app = FastAPI()  # lifespan=lifespan
 
 
-app.mount("/templates", StaticFiles(directory="app/templates"), name="templates")
+app.mount("/templates", StaticFiles(directory=root_path / "templates"), name="templates")
 app.include_router(ws_router)
 app.include_router(interface_router)
 app.include_router(configuration_router)

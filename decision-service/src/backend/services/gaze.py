@@ -1,11 +1,11 @@
 import asyncio
 import json
 import os
-from app.services.connection_manager import manager
+from backend.services.connection_manager import manager
 from time import time
 import numpy as np
-from app.core import state
-from app.services import process_frame
+from backend.core import state
+from backend.services import process_frame
 
 
 # -------------------------------

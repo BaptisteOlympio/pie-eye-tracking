@@ -2,8 +2,8 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 import asyncio
 
-from app.core import state
-from app.services import process_frame
+from backend.core import state
+from backend.services import process_frame
 
 
 class Adress(BaseModel):

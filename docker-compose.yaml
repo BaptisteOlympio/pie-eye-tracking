@@ -12,4 +12,4 @@ services:
     ports:
       - 8081
     tty: true
-    command: ["python3", "OpenFaceService.py"]
+    command: ["uv", "run", "src/OpenFaceService.py"]

@@ -4,12 +4,14 @@ import asyncio
 import numpy as np
 
 import sys
+from pathlib import Path
+services_path = Path(__file__).parent
 
-sys.path.append("/app/app/services")
+sys.path.append(services_path)
 import grpc
-import app.services.openfaceservice_pb2_grpc as openfaceservice_pb2_grpc
-import app.services.openfaceservice_pb2 as openfaceservice_pb2
-from app.core import state
+import backend.services.openfaceservice_pb2_grpc as openfaceservice_pb2_grpc
+import backend.services.openfaceservice_pb2 as openfaceservice_pb2
+from backend.core import state
 
 
 class ProcessFrame:

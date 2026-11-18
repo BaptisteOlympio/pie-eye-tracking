@@ -1,11 +1,11 @@
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from fastapi.responses import HTMLResponse
-from app.services import gaze
-from app.services import calibration
-from app.services import perf
-from app.services import process_frame
-from app.services import IHM
-from app.core import state
+from backend.services import gaze
+from backend.services import calibration
+from backend.services import perf
+from backend.services import process_frame
+from backend.services import IHM
+from backend.core import state
 
 
 interface_router = APIRouter()
