@@ -1,12 +1,20 @@
 {
+  // Name of the dev container, 
   "name": "Decision Service DevContainer",
+  // Location of the docker compose file with overwrite
   "dockerComposeFile": [
     "../../docker-compose.yaml",
     "./docker-compose.devcontainer.yaml"
   ],
+  // Name of the service to run
   "service": "decision-service",
-  "workspaceFolder": "/workspace",
-  "runServices": ["openface-service"],
+  "workspaceFolder": "/app",
+  "mounts": [
+    "source=${localWorkspaceFolder}/decision-service,target=/app,type=bind"
+  ],
+  "runServices": [
+    "openface-service"
+  ],
   "customizations": {
     "vscode": {
       "settings": {},
@@ -17,6 +25,5 @@
       ]
     }
   },
-  // "remoteUser": "boly",
   "updateRemoteUserUID": true
 }

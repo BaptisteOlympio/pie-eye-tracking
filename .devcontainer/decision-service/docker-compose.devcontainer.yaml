@@ -1,12 +1,9 @@
 services:
   decision-service:
-    build: ./decision-service/
-    working_dir: /workspace
-    volumes:
-      - ./decision-service:/workspace
+    build: decision-service/
     tty: true
     stdin_open: true
     command: ["bash"]
   
   openface-service :
-    build: ./openface-service/
+    build: openface-service/
